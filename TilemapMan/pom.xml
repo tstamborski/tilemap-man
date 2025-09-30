@@ -22,6 +22,11 @@
                 <version>3.4.1</version>
                 <configuration>
                     <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <mainClass>com.tstamborski.tilemapman.TilemapMan</mainClass>
+                        </manifest>
                         <compress>true</compress>
                     </archive>
                 </configuration>
