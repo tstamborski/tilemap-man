@@ -78,15 +78,12 @@ public class Tileset {
     public Tileset(BufferedImage img, int tilew, int tileh, int transparency, boolean limit8bit) {
         tilesetImage = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = tilesetImage.createGraphics();
-        BufferedImage img2;
         
         if (img.getType() == BufferedImage.TYPE_BYTE_INDEXED) {
-            img2 = ColorUtil.makeIndexTrasparent(img, (byte)0x00);
-        } else {
-            img2 = ColorUtil.makeARGBTransparent(img, transparency);
+            img = ColorUtil.makeIndexTrasparent(img, (byte)0);
         }
         
-        g2d.drawImage(img2, 0, 0, null);
+        g2d.drawImage(img, 0, 0, null);
         g2d.dispose();
         
         this.tileWidth = tilew;
