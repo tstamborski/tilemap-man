@@ -21,7 +21,7 @@ public class TilemapMan {
     public static void main(String[] args) {
         TestWindow test = new TestWindow();
         JLabel label = new JLabel();
-        String path = "C:/Users/tstam/Documents/aseprite/sewers-platformer/tileset01.png";
+        String path = "C:/Users/tstam/Documents/aseprite/asm/test-tileset.bmp";
         Tileset tiles;
         
         try {
@@ -34,5 +34,9 @@ public class TilemapMan {
         label.setIcon(new ImageIcon(tiles.toBufferedImage()));
         test.addComponent(label);
         test.setVisible(true);
+        
+        System.out.println("Tileset resolution: " + tiles.getWidth() + "x" + tiles.getHeight());
+        System.out.println("Tileset size in tiles: " + tiles.getTileNumber());
+        System.out.println("Tile index at point 20x20: " + tiles.getTileIndexAt(20, 20));
     }
 }

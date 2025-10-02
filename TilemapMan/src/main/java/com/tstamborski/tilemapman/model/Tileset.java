@@ -60,7 +60,9 @@ public class Tileset {
     }
     
     public int getTileIndexAt(int x, int y) {
-        return (x / tileWidth) * (y / tileHeight);
+        int xcapacity = tilesetImage.getWidth() / tileWidth;
+        
+        return ((y / tileHeight) * xcapacity) + (x / tileWidth);
     }
     
     public int getTileWidth() {
@@ -69,6 +71,18 @@ public class Tileset {
     
     public int getTileHeight() {
         return tileHeight;
+    }
+    
+    public int getTileNumber() {
+        return tileNumber;
+    }
+    
+    public int getWidth() {
+        return tilesetImage.getWidth();
+    }
+    
+    public int getHeight() {
+        return tilesetImage.getHeight();
     }
     
     public BufferedImage toBufferedImage() {
