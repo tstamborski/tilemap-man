@@ -11,6 +11,8 @@ import com.tstamborski.tilemapman.model.Tileset;
 import com.tstamborski.tilemapman.model.TilesetLoader;
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 /**
  *
@@ -20,20 +22,20 @@ public class TilemapMan {
 
     public static void main(String[] args) {
         TestWindow test = new TestWindow();
-        String path = "C:/Users/tstam/Documents/aseprite/asm/test-tileset.bmp";
+        //String path = "C:/Users/tstam/Documents/aseprite/asm/test-tileset.bmp";
+        URL url = TilemapMan.class.getResource("images/test-tileset.bmp");
         Tileset tiles;
         ShortMap2D map = new ShortMap2D(16, 8);
         
         try {
-            tiles = TilesetLoader.fromFile(new File(path), 16, 16);
-        } catch (IOException ex) {
+            tiles = TilesetLoader.fromFile(new File(url.toURI()), 16, 16);
+        } catch (IOException | URISyntaxException ex) {
             System.exit(-1);
             return;
         }
         
-        map.clear((short)2);
-        map.resize(4, 4);
-        map.resize(16, 8);
+        for (int i = 0; i < map.getSize(); i++)
+            map.set(i % map.getWidth(), i / map.getWidth(), (short)(i % 4));
         TestView view = new TestView(map, tiles);
         test.addComponent(view);
         test.setVisible(true);

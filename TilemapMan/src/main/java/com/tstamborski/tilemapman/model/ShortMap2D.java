@@ -55,6 +55,10 @@ public class ShortMap2D {
         return data[y*width + x];
     }
     
+    public void set(int x, int y, short val) {
+        data[y*width + x] = val;
+    }
+    
     public void resize(int new_width, int new_height) {
         short[] new_data = new short[new_width * new_height];
         int minw = Math.min(new_width, width);

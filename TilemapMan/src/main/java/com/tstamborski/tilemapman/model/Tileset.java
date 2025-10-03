@@ -43,7 +43,7 @@ public class Tileset {
         int index = ((y / tileHeight) * columns) + (x / tileWidth);
         
         if (index < 0 || index >= tileImages.length)
-            throw new IndexOutOfBoundsException(index);
+            throw new IndexOutOfBoundsException(String.format("Index %d is out of bounds.", index));
         
         return index;
     }
