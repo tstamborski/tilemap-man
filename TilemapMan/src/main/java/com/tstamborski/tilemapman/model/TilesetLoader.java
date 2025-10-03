@@ -28,6 +28,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import javax.imageio.ImageIO;
 
 /**
@@ -41,6 +42,18 @@ public class TilesetLoader {
     
     public static Tileset fromFile(File file, int tilew, int tileh, int limit) throws IOException {
         BufferedImage src = ImageIO.read(file);
+        
+        src = convertToARGB(src);
+        BufferedImage[] tiles = slice(src, tilew, tileh, limit);
+        return new Tileset(tilew, tileh, tiles, src);
+    }
+    
+    public static Tileset fromURL(URL url, int tilew, int tileh) throws IOException {
+        return fromURL(url, tilew, tileh, Short.MAX_VALUE);
+    }
+    
+    public static Tileset fromURL(URL url, int tilew, int tileh, int limit) throws IOException {
+        BufferedImage src = ImageIO.read(url);
         
         src = convertToARGB(src);
         BufferedImage[] tiles = slice(src, tilew, tileh, limit);

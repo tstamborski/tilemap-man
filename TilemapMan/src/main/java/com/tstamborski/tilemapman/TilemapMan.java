@@ -9,9 +9,7 @@ import com.tstamborski.tilemapman.gui.TestView;
 import com.tstamborski.tilemapman.model.ShortMap2D;
 import com.tstamborski.tilemapman.model.Tileset;
 import com.tstamborski.tilemapman.model.TilesetLoader;
-import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
 
 /**
@@ -28,14 +26,15 @@ public class TilemapMan {
         ShortMap2D map = new ShortMap2D(16, 8);
         
         try {
-            tiles = TilesetLoader.fromFile(new File(url.toURI()), 16, 16);
-        } catch (IOException | URISyntaxException ex) {
+            tiles = TilesetLoader.fromURL(url, 16, 16);
+        } catch (IOException ex) {
             System.exit(-1);
             return;
         }
         
         for (int i = 0; i < map.getSize(); i++)
             map.set(i % map.getWidth(), i / map.getWidth(), (short)(i % 4));
+        map.set(0, 0, (short)63);
         TestView view = new TestView(map, tiles);
         test.addComponent(view);
         test.setVisible(true);
