@@ -23,8 +23,6 @@
  */
 package com.tstamborski.tilemapman.model;
 
-import com.tstamborski.util.ColorUtil;
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 /**
@@ -32,37 +30,22 @@ import java.awt.image.BufferedImage;
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
 public class Tileset {
-    BufferedImage tilesetImage;
-    BufferedImage[] subImages;
-    int tileWidth, tileHeight;
-    int tileNumber;
-    
-    private void createSubImages() {
-      subImages = new BufferedImage[tileNumber];
-      
-      int i = 0;
-      int x, y;
-      int xcapacity = tilesetImage.getWidth() / tileWidth;
-      while (i < tileNumber) {
-          x = (i % xcapacity) * tileWidth;
-          y = (i / xcapacity) * tileHeight;
-          subImages[i] = tilesetImage.getSubimage(x, y, tileWidth, tileHeight);
-          
-          i++;
-      }
-    }
+    private final BufferedImage originalImage;
+    private final BufferedImage[] tileImages;
+    private final int tileWidth, tileHeight;
     
     public BufferedImage getTile(int index) {
-        if (index < 0 || index >= tileNumber)
-            return null;
-        
-        return subImages[index];
+        return tileImages[index];
     }
     
     public int getTileIndexAt(int x, int y) {
-        int xcapacity = tilesetImage.getWidth() / tileWidth;
+        int columns = originalImage.getWidth() / tileWidth;
+        int index = ((y / tileHeight) * columns) + (x / tileWidth);
         
-        return ((y / tileHeight) * xcapacity) + (x / tileWidth);
+        if (index < 0 || index >= tileImages.length)
+            throw new IndexOutOfBoundsException(index);
+        
+        return index;
     }
     
     public int getTileWidth() {
@@ -73,38 +56,26 @@ public class Tileset {
         return tileHeight;
     }
     
-    public int getTileNumber() {
-        return tileNumber;
+    public int getSize() {
+        return tileImages.length;
     }
     
     public int getWidth() {
-        return tilesetImage.getWidth();
+        return originalImage.getWidth();
     }
     
     public int getHeight() {
-        return tilesetImage.getHeight();
+        return originalImage.getHeight();
     }
     
-    public BufferedImage toBufferedImage() {
-        return tilesetImage;
+    public BufferedImage getOriginalImage() {
+        return originalImage;
     }
 
-    public Tileset(BufferedImage img, int tilew, int tileh, int transparency, boolean limit8bit) {
-        tilesetImage = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2d = tilesetImage.createGraphics();
-        
-        if (img.getType() == BufferedImage.TYPE_BYTE_INDEXED) {
-            img = ColorUtil.makeIndexTrasparent(img, (byte)0);
-        }
-        
-        g2d.drawImage(img, 0, 0, null);
-        g2d.dispose();
-        
+    public Tileset(int tilew, int tileh, BufferedImage[] tiles, BufferedImage srcImg) {
         this.tileWidth = tilew;
         this.tileHeight = tileh;
-        int img_capacity = (tilesetImage.getWidth() / tilew) * (tilesetImage.getHeight() / tileh);
-        this.tileNumber = 
-                limit8bit ? Math.min(img_capacity, 256) : Math.min(img_capacity, Short.MAX_VALUE + 1);
-        createSubImages();
+        this.tileImages = tiles;
+        this.originalImage = srcImg;
     }
 }

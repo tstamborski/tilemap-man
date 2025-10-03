@@ -87,6 +87,9 @@ public class ColorUtil {
     }
     
     public static BufferedImage makeIndexTrasparent(BufferedImage img, byte index) {
+        if (img.getType() != BufferedImage.TYPE_BYTE_INDEXED)
+            throw new IllegalArgumentException("BufferedImage must be type TYPE_BYTE_INDEXED.");
+        
         IndexColorModel icm = (IndexColorModel)img.getColorModel();
         int icm_size = icm.getMapSize();
         byte[] a = new byte[icm_size];
@@ -108,6 +111,9 @@ public class ColorUtil {
     }
     
     public static BufferedImage makeARGBTransparent(BufferedImage img, int argb) {
+        if (img.getType() != BufferedImage.TYPE_INT_ARGB)
+            throw new IllegalArgumentException("BufferedImage must be type TYPE_INT_ARGB.");
+        
         BufferedImage new_img = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB);
         int pixel;
         for (int y = 0; y < img.getHeight(); y++) {

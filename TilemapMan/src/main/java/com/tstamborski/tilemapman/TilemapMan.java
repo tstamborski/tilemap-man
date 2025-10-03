@@ -6,9 +6,9 @@ package com.tstamborski.tilemapman;
 
 import com.tstamborski.gui.TestWindow;
 import com.tstamborski.tilemapman.model.Tileset;
+import com.tstamborski.tilemapman.model.TilesetLoader;
 import java.io.File;
 import java.io.IOException;
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
@@ -25,18 +25,18 @@ public class TilemapMan {
         Tileset tiles;
         
         try {
-            tiles = new Tileset(ImageIO.read(new File(path)), 16, 16, 0, false);
+            tiles = TilesetLoader.fromFile(new File(path), 16, 16);
         } catch (IOException ex) {
             System.exit(-1);
             return;
         }
         
-        label.setIcon(new ImageIcon(tiles.toBufferedImage()));
+        label.setIcon(new ImageIcon(tiles.getOriginalImage()));
         test.addComponent(label);
         test.setVisible(true);
         
         System.out.println("Tileset resolution: " + tiles.getWidth() + "x" + tiles.getHeight());
-        System.out.println("Tileset size in tiles: " + tiles.getTileNumber());
+        System.out.println("Tileset size in tiles: " + tiles.getSize());
         System.out.println("Tile index at point 20x20: " + tiles.getTileIndexAt(20, 20));
     }
 }
