@@ -23,20 +23,22 @@
  */
 package com.tstamborski.tilemapman.model;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 
 /**
  *
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
-public class ShortMap2D {
-    private short[] data;
+public class TilemapProject {
+    private final ArrayList<ShortMap2D> layers;
     int width, height;
     
-    public ShortMap2D(int width, int height) {
-        data = new short[width * height];
-        this.width = width;
-        this.height = height;
+    public TilemapProject(int nlayers, int w, int h) {
+        this.width = w;
+        this.height = h;
+        this.layers = new ArrayList<>();
+        
+        addLayers(nlayers);
     }
 
     public int getWidth() {
@@ -47,36 +49,35 @@ public class ShortMap2D {
         return height;
     }
     
-    public int getCapacity() {
-        return data.length;
+    public short get(int layer, int x, int y) {
+        return layers.get(layer).get(x, y);
     }
     
-    public short get(int x, int y) {
-        return data[y*width + x];
+    public void set(int layer, int x, int y, short val) {
+        layers.get(layer).set(x, y, val);
     }
     
-    public void set(int x, int y, short val) {
-        data[y*width + x] = val;
+    public int getLayersNumber() {
+        return layers.size();
     }
     
-    public void resize(int new_width, int new_height) {
-        short[] new_data = new short[new_width * new_height];
-        int minw = Math.min(new_width, width);
-        int minh = Math.min(new_height, height);
-        
-        for (int y = 0; y < minh; y++) {
-            for (int x = 0; x < new_width; x++) {
-                if (x < minw)
-                    new_data[y * new_width + x] = data[y * width + x];
-            }
-        }
-        
-        this.data = new_data;
-        this.width = new_width;
-        this.height = new_height;
+    public final void addLayers(int howmany) {
+        for (int i = 0; i < howmany; i++)
+            layers.add(new ShortMap2D(width, height));
     }
     
-    public void clear(short val) {
-        Arrays.fill(data, val);
+    public final void removeLayers(int howmany) {
+        for (int i = 0; i < howmany; i++)
+            layers.remove(layers.size() - 1);
+    }
+    
+    public void resize(int w, int h) {
+        this.width = w;
+        this.height = h;
+        layers.forEach(layer -> layer.resize(w, h));
+    }
+    
+    public void clear(int layer, short clearvalue) {
+        layers.get(layer).clear(clearvalue);
     }
 }

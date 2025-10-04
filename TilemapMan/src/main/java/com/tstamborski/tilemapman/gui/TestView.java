@@ -23,11 +23,13 @@
  */
 package com.tstamborski.tilemapman.gui;
 
-import com.tstamborski.tilemapman.model.ShortMap2D;
+import com.tstamborski.tilemapman.model.TilemapProject;
 import com.tstamborski.tilemapman.model.Tileset;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Event;
 import java.awt.Graphics;
+import java.awt.event.MouseEvent;
 import javax.swing.JComponent;
 
 /**
@@ -35,16 +37,28 @@ import javax.swing.JComponent;
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
 public class TestView extends JComponent {
-    private final ShortMap2D map;
+    private final TilemapProject map;
     private final Tileset set;
+    private int usedLayer;
     
-    public TestView(ShortMap2D map, Tileset set) {
+    public TestView(TilemapProject map, Tileset set) {
         this.map = map;
         this.set = set;
         
         setPreferredSize(new Dimension(map.getWidth()*set.getTileWidth(), map.getHeight()*set.getTileHeight()));
+        enableEvents(MouseEvent.MOUSE_EVENT_MASK);
     }
 
+    protected void drawLayer(Graphics g, byte alpha, int layer) {
+        int stepx = set.getTileWidth();
+        int stepy = set.getTileHeight();
+        int maxx = map.getWidth();
+        int maxy = map.getHeight();
+        
+        for (int x = 0; x < maxx; x++)
+            for (int y = 0; y < maxy; y++)
+                g.drawImage(set.getTile(map.get(layer, x, y)), x*stepx, y*stepy, null);
+    }
     
     @Override
     protected void paintComponent(Graphics g) {
@@ -53,13 +67,20 @@ public class TestView extends JComponent {
         g.setColor(Color.WHITE);
         g.clearRect(0, 0, getWidth(), getHeight());
         
-        int stepx = set.getTileWidth();
-        int stepy = set.getTileHeight();
-        int maxx = map.getWidth();
-        int maxy = map.getHeight();
-        
-        for (int x = 0; x < maxx; x++)
-            for (int y = 0; y < maxy; y++)
-                g.drawImage(set.getTile(map.get(x, y)), x*stepx, y*stepy, null);
+        drawLayer(g, (byte)0xff, usedLayer);
     }
+
+    @Override
+    protected void processMouseEvent(MouseEvent e) {
+        super.processMouseEvent(e);
+        
+        if (e.getID() == MouseEvent.MOUSE_CLICKED) {
+            if (e.getButton() == MouseEvent.BUTTON1) {
+                usedLayer = (usedLayer + 1) % map.getLayersNumber();
+                repaint();
+            }
+        }
+    }
+    
+    
 }
