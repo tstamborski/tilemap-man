@@ -32,10 +32,11 @@ public class TilemapMan {
             return;
         }
         
-        map.clear(0, (short)1);
         for (int i = 0; i < map.getWidth() * map.getHeight(); i++)
-            map.set(2, i % map.getWidth(), i / map.getWidth(), (short)(i % 4));
-        map.clear(1, (short)63);
+            map.set(1, i % map.getWidth(), i / map.getWidth(), (short)(i % 4));
+        for (int i = 0; i < map.getWidth() * map.getHeight(); i++)
+            if (i % 4 == 0)
+                map.set(2, i % map.getWidth(), i / map.getWidth(), (short)(63));
         TestView view = new TestView(map, tiles);
         test.addComponent(view);
         test.setVisible(true);

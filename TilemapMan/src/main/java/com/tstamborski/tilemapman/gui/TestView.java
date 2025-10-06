@@ -25,10 +25,11 @@ package com.tstamborski.tilemapman.gui;
 
 import com.tstamborski.tilemapman.model.TilemapProject;
 import com.tstamborski.tilemapman.model.Tileset;
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Event;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import javax.swing.JComponent;
 
@@ -49,12 +50,15 @@ public class TestView extends JComponent {
         enableEvents(MouseEvent.MOUSE_EVENT_MASK);
     }
 
-    protected void drawLayer(Graphics g, byte alpha, int layer) {
+    protected void drawLayer(Graphics2D g, float alpha, int layer) {
+        AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha);
+        
         int stepx = set.getTileWidth();
         int stepy = set.getTileHeight();
         int maxx = map.getWidth();
         int maxy = map.getHeight();
         
+        g.setComposite(ac);
         for (int x = 0; x < maxx; x++)
             for (int y = 0; y < maxy; y++)
                 g.drawImage(set.getTile(map.get(layer, x, y)), x*stepx, y*stepy, null);
@@ -67,7 +71,11 @@ public class TestView extends JComponent {
         g.setColor(Color.WHITE);
         g.clearRect(0, 0, getWidth(), getHeight());
         
-        drawLayer(g, (byte)0xff, usedLayer);
+        for (int i = 0; i < map.getLayersNumber(); i++)
+            if (i <= usedLayer)
+                drawLayer((Graphics2D)g, 1.0f, i);
+            else
+                drawLayer((Graphics2D)g, 0.2f, i);
     }
 
     @Override

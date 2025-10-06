@@ -38,7 +38,8 @@ public class TilemapProject {
         this.height = h;
         this.layers = new ArrayList<>();
         
-        addLayers(nlayers);
+        for (int i = 0; i < nlayers; i++)
+            pushEmptyLayer();
     }
 
     public int getWidth() {
@@ -61,14 +62,21 @@ public class TilemapProject {
         return layers.size();
     }
     
-    public final void addLayers(int howmany) {
-        for (int i = 0; i < howmany; i++)
-            layers.add(new ShortMap2D(width, height));
+    public final void pushEmptyLayer() {
+        layers.add(new ShortMap2D(width, height));
     }
     
-    public final void removeLayers(int howmany) {
-        for (int i = 0; i < howmany; i++)
-            layers.remove(layers.size() - 1);
+    public void pushLayer(ShortMap2D layer) {
+        if (layer.getWidth() != width || layer.getHeight() != height)
+            throw new IllegalArgumentException("Invalid size of ShortMap2D.");
+        
+        layers.add(layer);
+    }
+    
+    public ShortMap2D popLayer() {
+        ShortMap2D layer = layers.get(layers.size()-1);
+        layers.remove(layers.size()-1);
+        return layer;
     }
     
     public void resize(int w, int h) {
@@ -79,5 +87,24 @@ public class TilemapProject {
     
     public void clear(int layer, short clearvalue) {
         layers.get(layer).clear(clearvalue);
+    }
+    
+    public void copyLayerFrom(int layer, ShortMap2D src) {
+        layers.get(layer).copyFrom(src);
+    }
+    
+    public ShortMap2D getLayerCopy(int layer) {
+        return layers.get(layer).deepCopy();
+    }
+    
+    public short[] exportLayerData(int layer) {
+        return layers.get(layer).toShortArray();
+    }
+    
+    public TilemapProject deepCopy() {
+        TilemapProject copy = new TilemapProject(0, width, height);
+        for (int i = 0; i < layers.size(); i++)
+            copy.layers.add(layers.get(i).deepCopy());
+        return copy;
     }
 }

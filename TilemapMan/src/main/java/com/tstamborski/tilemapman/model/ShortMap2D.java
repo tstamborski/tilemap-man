@@ -47,7 +47,7 @@ public class ShortMap2D {
         return height;
     }
     
-    public int getCapacity() {
+    public int getLinearSize() {
         return data.length;
     }
     
@@ -63,12 +63,8 @@ public class ShortMap2D {
         short[] new_data = new short[new_width * new_height];
         int minw = Math.min(new_width, width);
         int minh = Math.min(new_height, height);
-        
         for (int y = 0; y < minh; y++) {
-            for (int x = 0; x < new_width; x++) {
-                if (x < minw)
-                    new_data[y * new_width + x] = data[y * width + x];
-            }
+            System.arraycopy(data, y*width, new_data, y*new_width, minw);
         }
         
         this.data = new_data;
@@ -76,7 +72,26 @@ public class ShortMap2D {
         this.height = new_height;
     }
     
+    public void copyFrom(ShortMap2D src) {
+        int minw = Math.min(src.width, width);
+        int minh = Math.min(src.height, height);
+        
+        for (int y = 0; y < minh; y++) {
+            System.arraycopy(src.data, y*src.width, data, y*width, minw);
+        }
+    }
+    
     public void clear(short val) {
         Arrays.fill(data, val);
+    }
+
+    public ShortMap2D deepCopy() {
+        ShortMap2D copy = new ShortMap2D(width, height);
+        System.arraycopy(data, 0, copy.data, 0, data.length);
+        return copy;
+    }
+    
+    public short[] toShortArray() {
+        return data;
     }
 }
