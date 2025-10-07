@@ -60,11 +60,11 @@ public class Tileset {
         return tileImages.length;
     }
     
-    public int getWidth() {
+    public int getOriginalWidth() {
         return originalImage.getWidth();
     }
     
-    public int getHeight() {
+    public int getOriginalHeight() {
         return originalImage.getHeight();
     }
     

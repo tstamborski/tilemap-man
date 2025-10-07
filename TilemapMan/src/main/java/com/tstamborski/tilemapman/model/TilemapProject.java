@@ -24,6 +24,7 @@
 package com.tstamborski.tilemapman.model;
 
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 /**
  *
@@ -39,7 +40,7 @@ public class TilemapProject {
     public TilemapProject(int nlayers, int w, int h) {
         this.width = w;
         this.height = h;
-        this.layers = new ArrayList<>();
+        this.layers = new ArrayList<>(MAX_LAYERS);
         
         dataEventSupport = new DataModifyListenersList();
         
@@ -76,6 +77,11 @@ public class TilemapProject {
         return layers.get(index);
     }
     
+    public void forEachLayer(Consumer<FixedShortMap2D> consumer) {
+        layers.forEach(consumer);
+        dataEventSupport.setAllLayersModified();
+    }
+    
     public int getLayersNumber() {
         return layers.size();
     }
@@ -109,10 +115,9 @@ public class TilemapProject {
     public void resize(int w, int h) {
         this.width = w;
         this.height = h;
-        for (int i = 0; i < layers.size(); i++) {
-            layers.get(i).resize(w, h);
-            dataEventSupport.setLayerModified(i);
-        }
+        
+        layers.forEach(layer -> layer.resize(w, h));
+        dataEventSupport.setAllLayersModified();
     }
         
     public TilemapProject deepCopy() {

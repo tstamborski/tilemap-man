@@ -28,6 +28,8 @@ package com.tstamborski.tilemapman.model;
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
 public class LayerMask {
+    public static int ALL_LAYERS = -1;
+    
     private int mask;
     
     public LayerMask() {}
@@ -38,6 +40,10 @@ public class LayerMask {
     
     public void setLayerModified(int index) {
         mask |= (1 << index);
+    }
+    
+    public void setAllLayersModified() {
+        mask = ALL_LAYERS;
     }
     
     public boolean isLayerModified(int index) {

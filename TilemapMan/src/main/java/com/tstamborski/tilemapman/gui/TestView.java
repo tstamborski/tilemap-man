@@ -23,59 +23,27 @@
  */
 package com.tstamborski.tilemapman.gui;
 
+import com.tstamborski.tilemapman.TilemapRenderer;
 import com.tstamborski.tilemapman.model.TilemapProject;
 import com.tstamborski.tilemapman.model.Tileset;
-import java.awt.AlphaComposite;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
-import javax.swing.JComponent;
 
 /**
  *
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
-public class TestView extends JComponent {
-    private final TilemapProject map;
+public class TestView extends LayeredView {
+    private final TilemapProject project;
     private final Tileset set;
-    private int usedLayer;
     
-    public TestView(TilemapProject map, Tileset set) {
-        this.map = map;
+    public TestView(TilemapProject project, Tileset set) {
+        this.project = project;
         this.set = set;
         
-        setPreferredSize(new Dimension(map.getWidth()*set.getTileWidth(), map.getHeight()*set.getTileHeight()));
+        project.forEachLayer(map -> addLayer(TilemapRenderer.getLayerImage(map, this.set, 1)));
+        
+        pack();
         enableEvents(MouseEvent.MOUSE_EVENT_MASK);
-    }
-
-    protected void drawLayer(Graphics2D g, float alpha, int layer) {
-        AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha);
-        
-        int stepx = set.getTileWidth();
-        int stepy = set.getTileHeight();
-        int maxx = map.getWidth();
-        int maxy = map.getHeight();
-        
-        g.setComposite(ac);
-        for (int x = 0; x < maxx; x++)
-            for (int y = 0; y < maxy; y++)
-                g.drawImage(set.getTile(map.getLayer(layer).get(x, y)), x*stepx, y*stepy, null);
-    }
-    
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        
-        g.setColor(Color.WHITE);
-        g.clearRect(0, 0, getWidth(), getHeight());
-        
-        for (int i = 0; i < map.getLayersNumber(); i++)
-            if (i <= usedLayer)
-                drawLayer((Graphics2D)g, 1.0f, i);
-            else
-                drawLayer((Graphics2D)g, 0.2f, i);
     }
 
     @Override
@@ -84,8 +52,7 @@ public class TestView extends JComponent {
         
         if (e.getID() == MouseEvent.MOUSE_CLICKED) {
             if (e.getButton() == MouseEvent.BUTTON1) {
-                usedLayer = (usedLayer + 1) % map.getLayersNumber();
-                repaint();
+                setWorkLayer((getWorkLayer() + 1) % project.getLayersNumber());
             }
         }
     }

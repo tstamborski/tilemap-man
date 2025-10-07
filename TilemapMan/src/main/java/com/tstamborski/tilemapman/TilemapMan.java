@@ -41,7 +41,7 @@ public class TilemapMan {
         test.addComponent(view);
         test.setVisible(true);
         
-        System.out.println("Tileset resolution: " + tiles.getWidth() + "x" + tiles.getHeight());
+        System.out.println("Tileset resolution: " + tiles.getOriginalWidth() + "x" + tiles.getOriginalHeight());
         System.out.println("Tileset size in tiles: " + tiles.getSize());
         System.out.println("Tile index at point 20x20: " + tiles.getTileIndexAt(20, 20));
     }

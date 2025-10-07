@@ -36,6 +36,10 @@ public class DataModifyEvent {
     
     public boolean isLayerModified(int index) {
         int layer_bit = ((layer_mask >> index) & 1);
-        return (layer_bit != 0);
+        return layer_bit != 0;
+    }
+    
+    public boolean isAllLayersModified() {
+        return layer_mask == LayerMask.ALL_LAYERS;
     }
 }

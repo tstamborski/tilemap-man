@@ -44,6 +44,10 @@ public class DataModifyListenersList extends ArrayList<DataModifyListener> {
         mask.setLayerModified(index);
     }
     
+    public void setAllLayersModified() {
+        mask.setAllLayersModified();
+    }
+    
     public void fireDataModifyEvent() {
         DataModifyEvent event = new DataModifyEvent(mask);
         forEach(listener -> listener.dataModified(event));
