@@ -29,7 +29,7 @@ import java.util.Arrays;
  *
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
-public class ShortMap2D {
+public class ShortMap2D implements ReadonlyShortMap2D, FixedShortMap2D {
     private short[] data;
     int width, height;
     
@@ -39,22 +39,27 @@ public class ShortMap2D {
         this.height = height;
     }
 
+    @Override
     public int getWidth() {
         return width;
     }
 
+    @Override
     public int getHeight() {
         return height;
     }
     
+    @Override
     public int getLinearSize() {
         return data.length;
     }
     
+    @Override
     public short get(int x, int y) {
         return data[y*width + x];
     }
     
+    @Override
     public void set(int x, int y, short val) {
         data[y*width + x] = val;
     }
@@ -72,6 +77,7 @@ public class ShortMap2D {
         this.height = new_height;
     }
     
+    @Override
     public void copyFrom(ShortMap2D src) {
         int minw = Math.min(src.width, width);
         int minh = Math.min(src.height, height);
@@ -81,16 +87,19 @@ public class ShortMap2D {
         }
     }
     
+    @Override
     public void clear(short val) {
         Arrays.fill(data, val);
     }
 
+    @Override
     public ShortMap2D deepCopy() {
         ShortMap2D copy = new ShortMap2D(width, height);
         System.arraycopy(data, 0, copy.data, 0, data.length);
         return copy;
     }
     
+    @Override
     public short[] toShortArray() {
         return data;
     }

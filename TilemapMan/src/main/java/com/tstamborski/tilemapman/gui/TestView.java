@@ -61,7 +61,7 @@ public class TestView extends JComponent {
         g.setComposite(ac);
         for (int x = 0; x < maxx; x++)
             for (int y = 0; y < maxy; y++)
-                g.drawImage(set.getTile(map.get(layer, x, y)), x*stepx, y*stepy, null);
+                g.drawImage(set.getTile(map.getLayer(layer).get(x, y)), x*stepx, y*stepy, null);
     }
     
     @Override

@@ -24,7 +24,7 @@
 package com.tstamborski.tilemapman.model;
 
 import com.tstamborski.util.ColorUtil;
-import java.awt.Graphics2D;
+import com.tstamborski.util.ImageLoader;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -43,7 +43,7 @@ public class TilesetLoader {
     public static Tileset fromFile(File file, int tilew, int tileh, int limit) throws IOException {
         BufferedImage src = ImageIO.read(file);
         
-        src = convertToARGB(src);
+        src = convertToCompatible(src);
         BufferedImage[] tiles = slice(src, tilew, tileh, limit);
         return new Tileset(tilew, tileh, tiles, src);
     }
@@ -55,22 +55,16 @@ public class TilesetLoader {
     public static Tileset fromURL(URL url, int tilew, int tileh, int limit) throws IOException {
         BufferedImage src = ImageIO.read(url);
         
-        src = convertToARGB(src);
+        src = convertToCompatible(src);
         BufferedImage[] tiles = slice(src, tilew, tileh, limit);
         return new Tileset(tilew, tileh, tiles, src);
     }
 
-    private static BufferedImage convertToARGB(BufferedImage src) {
-        BufferedImage argb_img = new BufferedImage(src.getWidth(), src.getHeight(), BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = argb_img.createGraphics();
-        
+    private static BufferedImage convertToCompatible(BufferedImage src) {
         if (src.getType() == BufferedImage.TYPE_BYTE_INDEXED)
             src = ColorUtil.makeIndexTrasparent(src, (byte)0);
         
-        g.drawImage(src, 0, 0, null);
-        g.dispose();
-        
-        return argb_img;
+        return ImageLoader.toCompatibleImage(src);
     }
 
     private static BufferedImage[] slice(BufferedImage src, int tilew, int tileh, int limit) {
