@@ -5,10 +5,11 @@
 package com.tstamborski.tilemapman;
 
 import com.tstamborski.gui.TestWindow;
-import com.tstamborski.tilemapman.gui.TestView;
+import com.tstamborski.tilemapman.gui.TilemapEdit;
 import com.tstamborski.tilemapman.model.TilemapProject;
 import com.tstamborski.tilemapman.model.Tileset;
 import com.tstamborski.tilemapman.model.TilesetLoader;
+import java.awt.Color;
 import java.io.IOException;
 import java.net.URL;
 
@@ -37,8 +38,13 @@ public class TilemapMan {
         for (int i = 0; i < map.getWidth() * map.getHeight(); i++)
             if (i % 4 == 0)
                 map.getLayer(2).set(i % map.getWidth(), i / map.getWidth(), (short)(63));
-        TestView view = new TestView(map, tiles);
-        test.addComponent(view);
+        
+        TilemapEdit edit = new TilemapEdit();
+        edit.setBackground(Color.WHITE);
+        edit.setZoom(2);
+        edit.setTilemapProject(map);
+        edit.setTileset(tiles);
+        test.addComponent(edit);
         test.setVisible(true);
         
         System.out.println("Tileset resolution: " + tiles.getOriginalWidth() + "x" + tiles.getOriginalHeight());

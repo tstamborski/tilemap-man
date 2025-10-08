@@ -124,6 +124,7 @@ public class TilemapProject {
         TilemapProject copy = new TilemapProject(0, width, height);
         for (int i = 0; i < layers.size(); i++)
             copy.layers.add(layers.get(i).deepCopy());
+        dataEventSupport.forEach(listener -> copy.dataEventSupport.add(listener));
         return copy;
     }
 }

@@ -64,7 +64,7 @@ public class LayeredView extends JComponent {
     public int getLayersNumber() {
         return layers.size();
     }
-
+    
     public int getWorkLayer() {
         return workLayer;
     }
@@ -82,13 +82,18 @@ public class LayeredView extends JComponent {
             return;
         
         Graphics2D g2d = (Graphics2D)g;
-        for (int i = 0; i <= workLayer; i++)
+        g2d.setBackground(getBackground());
+        g2d.clearRect(0, 0, getWidth(), getHeight());
+        
+        for (int i = 0; i <= workLayer && i < layers.size(); i++)
             g2d.drawImage(layers.get(i), 0, 0, null);
         
         AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, ALPHA_VALUE);
         g2d.setComposite(ac);
         for (int i = workLayer + 1; i < layers.size(); i++)
             g2d.drawImage(layers.get(i), 0, 0, null);
+        
+        g2d.setComposite(AlphaComposite.SrcOver);
     }
     
     public void pack() {

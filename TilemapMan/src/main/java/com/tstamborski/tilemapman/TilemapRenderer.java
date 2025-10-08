@@ -62,6 +62,6 @@ public class TilemapRenderer {
         
         for (int y = 0; y < src.getHeight(); y++)
             for (int x = 0; x < src.getWidth(); x++)
-                g2d.drawImage(tiles.getTile(src.get(x, y)), x*stepx, y*stepy, null);
+                g2d.drawImage(tiles.getTile(src.get(x, y)), x*stepx, y*stepy, stepx, stepy, null);
     }
 }
