@@ -24,7 +24,7 @@ public class TilemapMan {
         //String path = "C:/Users/tstam/Documents/aseprite/asm/test-tileset.bmp";
         URL url = TilemapMan.class.getResource("images/test-tileset.bmp");
         Tileset tiles;
-        TilemapProject map = new TilemapProject(3, 16, 8);
+        TilemapProject map = new TilemapProject(2, 8, 8);
         
         try {
             tiles = TilesetLoader.fromURL(url, 16, 16);
@@ -34,10 +34,7 @@ public class TilemapMan {
         }
         
         for (int i = 0; i < map.getWidth() * map.getHeight(); i++)
-            map.getLayer(1).set(i % map.getWidth(), i / map.getWidth(), (short)(i % 4));
-        for (int i = 0; i < map.getWidth() * map.getHeight(); i++)
-            if (i % 4 == 0)
-                map.getLayer(2).set(i % map.getWidth(), i / map.getWidth(), (short)(63));
+            map.getLayer(0).set(i % map.getWidth(), i / map.getWidth(), (short)(i));
         
         TilemapEdit edit = new TilemapEdit();
         edit.setBackground(Color.WHITE);

@@ -23,7 +23,11 @@
  */
 package com.tstamborski.tilemapman;
 
+import com.tstamborski.tilemapman.commands.Command;
+import com.tstamborski.tilemapman.commands.DrawCommand;
 import com.tstamborski.tilemapman.gui.TilemapEdit;
+import com.tstamborski.tilemapman.model.DataModifyEvent;
+import com.tstamborski.tilemapman.model.DataModifyListener;
 import com.tstamborski.tilemapman.model.ShortMap2D;
 import com.tstamborski.tilemapman.model.TilemapProject;
 import com.tstamborski.tilemapman.model.Tileset;
@@ -37,7 +41,7 @@ import java.io.IOException;
  *
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
-public class TilemapEditController {
+public class TilemapEditController implements DataModifyListener {
     private final TilemapEdit view;
     
     private final PatternFromTilemap selectMaker;
@@ -59,7 +63,8 @@ public class TilemapEditController {
         try {
             sorryImage = ImageLoader.fromURL(getClass().getResource("images/sorry-notileset.png"));
         } catch (IOException ex) {
-            sorryImage = new BufferedImage(512, 512, BufferedImage.TYPE_INT_ARGB);
+            if (sorryImage == null)
+                sorryImage = new BufferedImage(512, 512, BufferedImage.TYPE_INT_ARGB);
         }
     }
 
@@ -91,6 +96,8 @@ public class TilemapEditController {
     
     public void setTilemapProject(TilemapProject project) {
         this.project = project;
+        
+        project.addDataModifyListener(this);
         createImages();
         
         view.pack();
@@ -107,9 +114,6 @@ public class TilemapEditController {
     }
     
     public void setZoom(int zoom) {
-        if (this.zoom == zoom)
-            return;
-        
         this.zoom = zoom;
         createSelectionImage();
         createImages();
@@ -118,9 +122,25 @@ public class TilemapEditController {
         view.repaint();
     }
     
+    public void setPattern(ShortMap2D pattern) {
+        this.pattern = pattern;
+    }
+    
+    public ShortMap2D getPattern() {
+        return pattern;
+    }
+    
     public void processMouseEvent(MouseEvent event) {
         if (project == null || tileset == null)
             return;
+        
+        if (event.getID() == MouseEvent.MOUSE_PRESSED && event.getButton() == MouseEvent.BUTTON1) {
+            Command cmd = new DrawCommand(project, view.getWorkLayer(), getTilemapX(event.getX()), getTilemapY(event.getY()), pattern);
+            cmd.execute();
+        } if (event.getID() == MouseEvent.MOUSE_DRAGGED && (event.getModifiersEx() & MouseEvent.BUTTON1_DOWN_MASK) != 0) {
+            Command cmd = new DrawCommand(project, view.getWorkLayer(), getTilemapX(event.getX()), getTilemapY(event.getY()), pattern);
+            cmd.execute();
+        }
         
         if (event.getID() == MouseEvent.MOUSE_PRESSED && event.getButton() == MouseEvent.BUTTON3) {
             selectMaker.setTilemapLayer(project.getLayer(view.getWorkLayer()));
@@ -132,7 +152,7 @@ public class TilemapEditController {
             selectMaker.setEndPoint(getTilemapX(event.getX()), getTilemapY(event.getY()));
             view.repaint();
         } if (event.getID() == MouseEvent.MOUSE_RELEASED && event.getButton() == MouseEvent.BUTTON3) {
-            //pattern = selectMaker.get();
+            setPattern(selectMaker.get());
             isSelect = false;
             view.repaint();
         }
@@ -158,10 +178,41 @@ public class TilemapEditController {
     }
     
     private int getTilemapX(int mousex) {
+        if (mousex < 0)
+            return 0;
+        if (mousex > project.getWidth() * tileset.getTileWidth() * zoom)
+            return project.getWidth() - 1;
+        
         return mousex / (tileset.getTileWidth() * zoom);
     }
     
     private int getTilemapY(int mousey) {
+        if (mousey < 0)
+            return 0;
+        if (mousey > project.getHeight() * tileset.getTileHeight() * zoom)
+            return project.getHeight() - 1;
+        
         return mousey / (tileset.getTileHeight() * zoom);
+    }
+
+    @Override
+    public void dataModified(DataModifyEvent event) {
+        if (event.isAllLayersModified()) {
+            createImages();
+            view.repaint();
+        } else {
+            for (int i = 0; i < project.getLayersNumber(); i++) {
+                if (event.isLayerModified(i)) {
+                    if (i < view.getLayersNumber())
+                        TilemapRenderer.renderLayer(view.getLayer(i), project.getLayer(i), tileset, zoom);
+                    else
+                        view.addLayer(TilemapRenderer.getLayerImage(project.getLayer(i), tileset, zoom));
+                }
+            }
+            for (int i = project.getLayersNumber(); i < view.getLayersNumber(); i++) {
+                view.removeLayer(view.getLayersNumber() - 1);
+            }
+            view.repaint();
+        }
     }
 }

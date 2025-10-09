@@ -25,11 +25,14 @@ package com.tstamborski.tilemapman;
 
 import com.tstamborski.tilemapman.model.ReadonlyShortMap2D;
 import com.tstamborski.tilemapman.model.Tileset;
+import com.tstamborski.util.ErrorUtil;
+import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
+import java.util.logging.Level;
 
 /**
  *
@@ -60,8 +63,17 @@ public class TilemapRenderer {
         int stepx = tiles.getTileWidth() * zoom;
         int stepy = tiles.getTileHeight() * zoom;
         
-        for (int y = 0; y < src.getHeight(); y++)
-            for (int x = 0; x < src.getWidth(); x++)
-                g2d.drawImage(tiles.getTile(src.get(x, y)), x*stepx, y*stepy, stepx, stepy, null);
+        g2d.setComposite(AlphaComposite.Src);
+        
+        for (int y = 0; y < src.getHeight(); y++) {
+            for (int x = 0; x < src.getWidth(); x++) {
+                try {
+                    g2d.drawImage(tiles.getTile(src.get(x, y)), x*stepx, y*stepy, stepx, stepy, null);
+                } catch(IndexOutOfBoundsException ex) {
+                    ErrorUtil.logError(ex, Level.WARNING, "Tileset is smaller than value in source tilemap.");
+                    g2d.drawImage(tiles.getTile(src.get(x, y) % tiles.getSize()), x*stepx, y*stepy, stepx, stepy, null);
+                }
+            }
+        }
     }
 }
