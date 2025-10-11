@@ -31,6 +31,7 @@ import java.util.ArrayList;
  */
 public class DataModifyListenersList extends ArrayList<DataModifyListener> {
     private final LayerMask mask;
+    private boolean resized;
     
     public DataModifyListenersList() {
         mask = new LayerMask();
@@ -48,8 +49,14 @@ public class DataModifyListenersList extends ArrayList<DataModifyListener> {
         mask.setAllLayersModified();
     }
     
+    public void setResized(boolean resized) {
+        this.resized = resized;
+        if (resized)
+            mask.setAllLayersModified();
+    }
+    
     public void fireDataModifyEvent() {
-        DataModifyEvent event = new DataModifyEvent(mask);
+        DataModifyEvent event = new DataModifyEvent(mask, resized);
         forEach(listener -> listener.dataModified(event));
     }
 }

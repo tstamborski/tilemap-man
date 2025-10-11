@@ -30,10 +30,9 @@ import java.util.function.Consumer;
  *
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
-public class TilemapProject {
-    public final int MAX_LAYERS = Integer.SIZE;
+public class TilemapProject extends DataModel {
+    public final int MAX_LAYERS = LayerMask.MAX_LAYERS;
     
-    private final DataModifyListenersList dataEventSupport;
     private final ArrayList<ShortMap2D> layers;
     int width, height;
     
@@ -41,8 +40,6 @@ public class TilemapProject {
         this.width = w;
         this.height = h;
         this.layers = new ArrayList<>(MAX_LAYERS);
-        
-        dataEventSupport = new DataModifyListenersList();
         
         for (int i = 0; i < nlayers; i++)
             pushEmptyLayer();
@@ -56,30 +53,14 @@ public class TilemapProject {
         return height;
     }
     
-    public void addDataModifyListener(DataModifyListener listener) {
-        dataEventSupport.add(listener);
-    }
-    
-    public void removeDataModifyListener(DataModifyListener listener) {
-        dataEventSupport.remove(listener);
-    }
-    
-    public void beginModify() {
-        dataEventSupport.clearLayerMask();
-    }
-    
-    public void endModify() {
-        dataEventSupport.fireDataModifyEvent();
-    }
-    
     public FixedShortMap2D getLayer(int index) {
-        dataEventSupport.setLayerModified(index);
+        getDataModifyTrigger().setLayerModified(index);
         return layers.get(index);
     }
     
     public void forEachLayer(Consumer<FixedShortMap2D> consumer) {
         layers.forEach(consumer);
-        dataEventSupport.setAllLayersModified();
+        getDataModifyTrigger().setAllLayersModified();
     }
     
     public int getLayersNumber() {
@@ -91,7 +72,7 @@ public class TilemapProject {
             throw new IndexOutOfBoundsException("Tilemap has maximum number of layers already.");
         
         layers.add(new ShortMap2D(width, height));
-        dataEventSupport.setLayerModified(layers.size() - 1);
+        getDataModifyTrigger().setLayerModified(layers.size() - 1);
     }
     
     public void pushLayer(ShortMap2D layer) {
@@ -102,14 +83,12 @@ public class TilemapProject {
             throw new IllegalArgumentException("Invalid size of ShortMap2D.");
         
         layers.add(layer);
-        dataEventSupport.setLayerModified(layers.size() - 1);
+        getDataModifyTrigger().setLayerModified(layers.size() - 1);
     }
     
     public ShortMap2D popLayer() {
-        ShortMap2D layer = layers.get(layers.size() - 1);
-        dataEventSupport.setLayerModified(layers.size() - 1);
-        layers.remove(layers.size() - 1);
-        return layer;
+        getDataModifyTrigger().setLayerModified(layers.size() - 1);
+        return layers.remove(layers.size() - 1);
     }
     
     public void resize(int w, int h) {
@@ -117,14 +96,17 @@ public class TilemapProject {
         this.height = h;
         
         layers.forEach(layer -> layer.resize(w, h));
-        dataEventSupport.setAllLayersModified();
+        getDataModifyTrigger().setResized(true);
     }
         
     public TilemapProject deepCopy() {
         TilemapProject copy = new TilemapProject(0, width, height);
+        
         for (int i = 0; i < layers.size(); i++)
             copy.layers.add(layers.get(i).deepCopy());
-        dataEventSupport.forEach(listener -> copy.dataEventSupport.add(listener));
+        
+        getDataModifyTrigger().forEach(listener -> copy.getDataModifyTrigger().add(listener));
+        
         return copy;
     }
 }

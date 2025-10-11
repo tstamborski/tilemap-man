@@ -36,13 +36,22 @@ import javax.swing.JComponent;
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
 public class LayeredView extends JComponent {
-    private final float ALPHA_VALUE = 0.2f;
-    
     private final ArrayList<BufferedImage> layers;
+    private LayerRenderer renderer;
     private int workLayer;
     
     public LayeredView() {
         layers = new ArrayList<>();
+        renderer = new DefaultLayerRenderer();
+    }
+
+    public LayerRenderer getRenderer() {
+        return renderer;
+    }
+
+    public void setRenderer(LayerRenderer renderer) {
+        this.renderer = renderer;
+        repaint();
     }
     
     public void addLayer(BufferedImage img) {
@@ -85,13 +94,7 @@ public class LayeredView extends JComponent {
         g2d.setBackground(getBackground());
         g2d.clearRect(0, 0, getWidth(), getHeight());
         
-        for (int i = 0; i <= workLayer && i < layers.size(); i++)
-            g2d.drawImage(layers.get(i), 0, 0, null);
-        
-        AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, ALPHA_VALUE);
-        g2d.setComposite(ac);
-        for (int i = workLayer + 1; i < layers.size(); i++)
-            g2d.drawImage(layers.get(i), 0, 0, null);
+        renderer.render(g2d, layers, workLayer);
         
         g2d.setComposite(AlphaComposite.SrcOver);
     }

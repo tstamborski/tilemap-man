@@ -27,24 +27,31 @@ package com.tstamborski.tilemapman.model;
  *
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
-public class DataModifyEvent {
-    LayerMask layerMask;
-    boolean resized;
+public class DataModel {
     
-    public DataModifyEvent(LayerMask mask, boolean resized) {
-        this.layerMask = mask.copy();
-        this.resized = resized;
+    private final DataModifyListenersList dataModifyTrigger;
+
+    public DataModel() {
+        dataModifyTrigger = new DataModifyListenersList();
+    }
+
+    public void addDataModifyListener(DataModifyListener listener) {
+        dataModifyTrigger.add(listener);
+    }
+
+    public void removeDataModifyListener(DataModifyListener listener) {
+        dataModifyTrigger.remove(listener);
+    }
+
+    public void beginModify() {
+        dataModifyTrigger.clearLayerMask();
+    }
+
+    public void endModify() {
+        dataModifyTrigger.fireDataModifyEvent();
     }
     
-    public boolean isResized() {
-        return resized;
-    }
-    
-    public boolean isLayerModified(int index) {
-        return layerMask.isLayerModified(index);
-    }
-    
-    public boolean isAllLayersModified() {
-        return layerMask.isAllLayersModified();
+    protected DataModifyListenersList getDataModifyTrigger() {
+        return dataModifyTrigger;
     }
 }

@@ -21,30 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.tstamborski.tilemapman.model;
+package com.tstamborski.tilemapman.gui;
+
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 /**
  *
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
-public class DataModifyEvent {
-    LayerMask layerMask;
-    boolean resized;
-    
-    public DataModifyEvent(LayerMask mask, boolean resized) {
-        this.layerMask = mask.copy();
-        this.resized = resized;
-    }
-    
-    public boolean isResized() {
-        return resized;
-    }
-    
-    public boolean isLayerModified(int index) {
-        return layerMask.isLayerModified(index);
-    }
-    
-    public boolean isAllLayersModified() {
-        return layerMask.isAllLayersModified();
-    }
+public interface LayerRenderer {
+    public void render(Graphics2D g2d, ArrayList<BufferedImage> layers, int workLayerIndex);
 }

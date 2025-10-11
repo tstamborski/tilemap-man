@@ -21,30 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.tstamborski.tilemapman.model;
+package com.tstamborski.tilemapman.gui;
+
+import java.awt.AlphaComposite;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 /**
  *
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
-public class DataModifyEvent {
-    LayerMask layerMask;
-    boolean resized;
+public class DefaultLayerRenderer implements LayerRenderer {
+    public static final float DEFAULT_ALPHA = 0.2f;
     
-    public DataModifyEvent(LayerMask mask, boolean resized) {
-        this.layerMask = mask.copy();
-        this.resized = resized;
+    private final AlphaComposite halfTransparent;
+    private final AlphaComposite opaque;
+    
+    public DefaultLayerRenderer() {
+        halfTransparent = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, DEFAULT_ALPHA);
+        opaque = AlphaComposite.SrcOver;
     }
-    
-    public boolean isResized() {
-        return resized;
-    }
-    
-    public boolean isLayerModified(int index) {
-        return layerMask.isLayerModified(index);
-    }
-    
-    public boolean isAllLayersModified() {
-        return layerMask.isAllLayersModified();
+
+    @Override
+    public void render(Graphics2D g2d, ArrayList<BufferedImage> layers, int workLayerIndex) {
+        for (int i = 0; i < layers.size(); i++) {
+            if (i == workLayerIndex)
+                g2d.setComposite(opaque);
+            else
+                g2d.setComposite(halfTransparent);
+            
+            g2d.drawImage(layers.get(i), 0, 0, null);
+        }
     }
 }

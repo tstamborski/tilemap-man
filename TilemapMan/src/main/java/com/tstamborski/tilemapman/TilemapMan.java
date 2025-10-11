@@ -37,7 +37,7 @@ public class TilemapMan {
             map.getLayer(0).set(i % map.getWidth(), i / map.getWidth(), (short)(i));
         
         TilemapEdit edit = new TilemapEdit();
-        edit.setBackground(Color.WHITE);
+        edit.setBackground(new Color(0x88, 0x88, 0xFF));
         edit.setZoom(2);
         edit.setTilemapProject(map);
         edit.setTileset(tiles);

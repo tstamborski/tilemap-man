@@ -43,8 +43,8 @@ import java.io.IOException;
  */
 public class TilemapEditController implements DataModifyListener {
     private final TilemapEdit view;
-    
     private final PatternFromTilemap selectMaker;
+    
     private SelectionImage selectImage;
     private BufferedImage sorryImage;
     
@@ -197,7 +197,7 @@ public class TilemapEditController implements DataModifyListener {
 
     @Override
     public void dataModified(DataModifyEvent event) {
-        if (event.isAllLayersModified()) {
+        if (event.isResized()) {
             createImages();
             view.repaint();
         } else {

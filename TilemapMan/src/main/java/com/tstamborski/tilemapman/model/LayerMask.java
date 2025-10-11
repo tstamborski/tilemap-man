@@ -28,7 +28,8 @@ package com.tstamborski.tilemapman.model;
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
 public class LayerMask {
-    public static int ALL_LAYERS = -1;
+    public static final int MAX_LAYERS = Integer.SIZE;
+    public static final int ALL_LAYERS = -1;
     
     private int mask;
     
@@ -46,9 +47,19 @@ public class LayerMask {
         mask = ALL_LAYERS;
     }
     
+    public boolean isAllLayersModified() {
+        return mask == ALL_LAYERS;
+    }
+    
     public boolean isLayerModified(int index) {
         int layer_bit = ((mask >> index) & 1);
         return (layer_bit != 0);
+    }
+    
+    public LayerMask copy() {
+        LayerMask copy = new LayerMask();
+        copy.mask = this.mask;
+        return copy;
     }
     
     public int toInt() {
