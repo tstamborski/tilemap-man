@@ -50,6 +50,7 @@ public class TilemapEditController implements DataModifyListener {
     
     private ShortMap2D pattern;
     private TilemapProject project;
+    private DrawingTool tool;
     private Tileset tileset;
     
     private int zoom;
@@ -96,6 +97,7 @@ public class TilemapEditController implements DataModifyListener {
     
     public void setTilemapProject(TilemapProject project) {
         this.project = project;
+        tool.setProject(project);
         
         project.addDataModifyListener(this);
         createImages();
@@ -124,10 +126,17 @@ public class TilemapEditController implements DataModifyListener {
     
     public void setPattern(ShortMap2D pattern) {
         this.pattern = pattern;
+        tool.setPattern(pattern);
     }
     
     public ShortMap2D getPattern() {
         return pattern;
+    }
+    
+    public void setTool(DrawingTool tool) {
+        tool.setPattern(pattern);
+        tool.setProject(project);
+        this.tool = tool;
     }
     
     public void processMouseEvent(MouseEvent event) {
@@ -135,11 +144,11 @@ public class TilemapEditController implements DataModifyListener {
             return;
         
         if (event.getID() == MouseEvent.MOUSE_PRESSED && event.getButton() == MouseEvent.BUTTON1) {
-            Command cmd = new DrawCommand(project, view.getWorkLayer(), getTilemapX(event.getX()), getTilemapY(event.getY()), pattern);
-            cmd.execute();
+            tool.press(view.getWorkLayer(), getTilemapX(event.getX()), getTilemapY(event.getY()));
         } if (event.getID() == MouseEvent.MOUSE_DRAGGED && (event.getModifiersEx() & MouseEvent.BUTTON1_DOWN_MASK) != 0) {
-            Command cmd = new DrawCommand(project, view.getWorkLayer(), getTilemapX(event.getX()), getTilemapY(event.getY()), pattern);
-            cmd.execute();
+            tool.apply(view.getWorkLayer(), getTilemapX(event.getX()), getTilemapY(event.getY()));
+        } if (event.getID() == MouseEvent.MOUSE_RELEASED && event.getButton() == MouseEvent.BUTTON1) {
+            tool.release(view.getWorkLayer(), getTilemapX(event.getX()), getTilemapY(event.getY()));
         }
         
         if (event.getID() == MouseEvent.MOUSE_PRESSED && event.getButton() == MouseEvent.BUTTON3) {

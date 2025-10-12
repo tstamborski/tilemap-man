@@ -33,7 +33,6 @@ import java.awt.Point;
  */
 public class PatternFromTilemap {
     private FixedShortMap2D layer;
-    private ShortMap2D pattern;
     private int startX, startY;
     private int endX, endY;
     
@@ -69,8 +68,7 @@ public class PatternFromTilemap {
         int w = Math.max(startX, endX) - Math.min(startX, endX) + 1;
         int h = Math.max(startY, endY) - Math.min(startY, endY) + 1;
         
-        if (pattern == null || pattern.getWidth() != w || pattern.getHeight() != h)
-            pattern = new ShortMap2D(w, h);
+        ShortMap2D pattern = new ShortMap2D(w, h);
         
         int minx = Math.min(startX, endX);
         int miny = Math.min(startY, endY);

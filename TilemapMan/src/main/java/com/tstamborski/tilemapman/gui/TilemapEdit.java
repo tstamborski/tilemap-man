@@ -23,6 +23,7 @@
  */
 package com.tstamborski.tilemapman.gui;
 
+import com.tstamborski.tilemapman.DrawingTool;
 import com.tstamborski.tilemapman.TilemapEditController;
 import com.tstamborski.tilemapman.model.TilemapProject;
 import com.tstamborski.tilemapman.model.Tileset;
@@ -53,6 +54,10 @@ public class TilemapEdit extends LayeredView {
     
     public void setTilemapProject(TilemapProject project) {
         controller.setTilemapProject(project);
+    }
+    
+    public void setTool(DrawingTool tool) {
+        controller.setTool(tool);
     }
 
     @Override

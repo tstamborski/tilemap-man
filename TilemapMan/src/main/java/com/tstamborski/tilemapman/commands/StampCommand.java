@@ -32,13 +32,13 @@ import com.tstamborski.tilemapman.model.TilemapProject;
  *
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
-public class DrawCommand implements Command {
+public class StampCommand implements Command {
     private final TilemapProject project;
     private final int layer, x, y;
     private final ReadonlyShortMap2D pattern;
     private final ShortMap2D dirtyRect;
     
-    public DrawCommand(TilemapProject project, int layer, int x, int y, ReadonlyShortMap2D pattern) {
+    public StampCommand(TilemapProject project, int layer, int x, int y, ReadonlyShortMap2D pattern) {
         this.project = project;
         this.layer = layer;
         this.x = x;
@@ -57,7 +57,8 @@ public class DrawCommand implements Command {
             for (int j = 0; j < pattern.getHeight(); j++) {
                 if (x + i < dst.getWidth() && y + j < dst.getHeight()) {
                     dirtyRect.set(i, j, dst.get(x + i, y + j));
-                    dst.set(x+i, y+j, pattern.get(i, j));
+                    dst.set(x+i, y+j, 
+                            pattern.get((x+i) % pattern.getWidth(), (y+j) % pattern.getHeight()));
                 }
             }
         }
@@ -80,4 +81,5 @@ public class DrawCommand implements Command {
         
         project.endModify();
     }
+    
 }

@@ -5,6 +5,8 @@
 package com.tstamborski.tilemapman;
 
 import com.tstamborski.gui.TestWindow;
+import com.tstamborski.tilemapman.commands.CommandManager;
+import com.tstamborski.tilemapman.gui.MainMenu;
 import com.tstamborski.tilemapman.gui.TilemapEdit;
 import com.tstamborski.tilemapman.model.TilemapProject;
 import com.tstamborski.tilemapman.model.Tileset;
@@ -21,7 +23,9 @@ public class TilemapMan {
 
     public static void main(String[] args) {
         TestWindow test = new TestWindow();
-        //String path = "C:/Users/tstam/Documents/aseprite/asm/test-tileset.bmp";
+        MainMenu menu = new MainMenu();
+        CommandManager cmdManager = new CommandManager();
+        StampTool stamp = new StampTool(cmdManager);
         URL url = TilemapMan.class.getResource("images/test-tileset.bmp");
         Tileset tiles;
         TilemapProject map = new TilemapProject(2, 8, 8);
@@ -36,12 +40,18 @@ public class TilemapMan {
         for (int i = 0; i < map.getWidth() * map.getHeight(); i++)
             map.getLayer(0).set(i % map.getWidth(), i / map.getWidth(), (short)(i));
         
+        menu.edit.undo.addActionListener(ae->cmdManager.undo());
+        menu.edit.redo.addActionListener(ae->cmdManager.redo());
+        
         TilemapEdit edit = new TilemapEdit();
-        edit.setBackground(new Color(0x88, 0x88, 0xFF));
+        edit.setBackground(new Color(0xAA, 0xAA, 0xFF));
         edit.setZoom(2);
+        edit.setTool(stamp);
         edit.setTilemapProject(map);
         edit.setTileset(tiles);
+        
         test.addComponent(edit);
+        test.setJMenuBar(menu);
         test.setVisible(true);
         
         System.out.println("Tileset resolution: " + tiles.getOriginalWidth() + "x" + tiles.getOriginalHeight());
