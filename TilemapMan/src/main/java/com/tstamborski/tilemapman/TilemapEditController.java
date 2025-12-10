@@ -23,8 +23,6 @@
  */
 package com.tstamborski.tilemapman;
 
-import com.tstamborski.tilemapman.commands.Command;
-import com.tstamborski.tilemapman.commands.DrawCommand;
 import com.tstamborski.tilemapman.gui.TilemapEdit;
 import com.tstamborski.tilemapman.model.DataModifyEvent;
 import com.tstamborski.tilemapman.model.DataModifyListener;
