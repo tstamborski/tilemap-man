@@ -23,10 +23,11 @@
  */
 package com.tstamborski.tilemapman.gui;
 
-import com.tstamborski.tilemapman.PatternFromTilemap;
+import com.tstamborski.tilemapman.model.TilemapProject;
 import com.tstamborski.tilemapman.model.Tileset;
+import com.tstamborski.tilemapman.tools.SelectionTool;
+import com.tstamborski.tilemapman.tools.TilemapSelectionTool;
 import java.awt.Graphics;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -36,13 +37,12 @@ import java.awt.event.MouseEvent;
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
 public class EnhancedTilemapEdit extends BasicTilemapEdit {
-    private final PatternFromTilemap selectMaker;
-    private SelectionImage selectImage;
+    private final SelectionTool selectionTool;
     private boolean rMouseButton;
     private ActionListener listener;
     
     public EnhancedTilemapEdit() {
-        selectMaker = new PatternFromTilemap();
+        selectionTool = new TilemapSelectionTool();
     }
     
     public void setActionListener(ActionListener listener) {
@@ -52,13 +52,25 @@ public class EnhancedTilemapEdit extends BasicTilemapEdit {
     @Override
     public void setTileset(Tileset tileset) {
         super.setTileset(tileset);
-        createSelectionImage();
+        selectionTool.setTileSize(
+                tileset.getTileWidth() * getZoom(), tileset.getTileHeight() * getZoom()
+        );
     }
 
     @Override
     public void setZoom(int zoom) {
         super.setZoom(zoom);
-        createSelectionImage();
+        
+        if (getTileset() == null) return;
+        selectionTool.setTileSize(
+                getTileset().getTileWidth() * zoom, getTileset().getTileHeight() * zoom
+        );
+    }
+    
+    @Override
+    public void setTilemapProject(TilemapProject project) {
+        super.setTilemapProject(project);
+        selectionTool.setProject(project);
     }
 
     @Override
@@ -69,13 +81,11 @@ public class EnhancedTilemapEdit extends BasicTilemapEdit {
             return;
         
         if (event.getID() == MouseEvent.MOUSE_PRESSED && event.getButton() == MouseEvent.BUTTON3) {
-            selectMaker.setTilemapLayer(getTilemapProject().getLayer(getWorkLayer()));
-            selectMaker.setStartPoint(getTilemapX(event.getX()), getTilemapY(event.getY()));
-            selectMaker.setEndPoint(getTilemapX(event.getX()), getTilemapY(event.getY()));
+            selectionTool.press(getWorkLayer(), getTilemapX(event.getX()), getTilemapY(event.getY()));
             rMouseButton = true;
             repaint();
         } if (event.getID() == MouseEvent.MOUSE_RELEASED && event.getButton() == MouseEvent.BUTTON3) {
-            setPattern(selectMaker.get());
+            setPattern(selectionTool.release());
             rMouseButton = false;
             repaint();
             fireActionEvent();
@@ -90,7 +100,7 @@ public class EnhancedTilemapEdit extends BasicTilemapEdit {
             return;
         
         if (event.getID() == MouseEvent.MOUSE_DRAGGED && rMouseButton) {
-            selectMaker.setEndPoint(getTilemapX(event.getX()), getTilemapY(event.getY()));
+            selectionTool.apply(getTilemapX(event.getX()), getTilemapY(event.getY()));
             repaint();
         }
     }
@@ -100,43 +110,8 @@ public class EnhancedTilemapEdit extends BasicTilemapEdit {
         super.paintComponent(g);
         
         if (rMouseButton) {
-            paintSelection(g);
+            selectionTool.paintSelection(g);
         }
-    }
-    
-    protected void paintSelection(Graphics g) {
-        Point ul = getSelectionUpperLeft();
-        Point lr = getSelectionLowerRight();
-
-        for (int y = ul.y; y < lr.y; y += selectImage.getHeight()) {
-            for (int x = ul.x; x < lr.x; x += selectImage.getWidth()) {
-                g.drawImage(selectImage, x, y, null);
-            }
-        }
-    }
-    
-    protected void createSelectionImage() {
-        if (getTileset() == null) return;
-        
-        selectImage = new SelectionImage(getTileset().getTileWidth() * getZoom(), getTileset().getTileHeight() * getZoom());
-    }
-    
-    private Point getSelectionUpperLeft() {
-        Point p = selectMaker.getUpperLeft();
-        p.setLocation(
-                p.x * getTileset().getTileWidth() * getZoom(), 
-                p.y * getTileset().getTileHeight() * getZoom()
-            );
-        return p;
-    }
-    
-    private Point getSelectionLowerRight() {
-        Point p = selectMaker.getLowerRight();
-        p.setLocation(
-                (p.x + 1) * getTileset().getTileWidth() * getZoom(), 
-                (p.y + 1) * getTileset().getTileHeight() * getZoom()
-            );
-        return p;
     }
     
     protected void fireActionEvent() {

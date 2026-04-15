@@ -23,7 +23,7 @@
  */
 package com.tstamborski.tilemapman.gui;
 
-import com.tstamborski.tilemapman.TilemapRenderer;
+import com.tstamborski.tilemapman.util.TilemapRenderer;
 import com.tstamborski.tilemapman.model.DataModifyEvent;
 import com.tstamborski.tilemapman.model.DataModifyListener;
 import com.tstamborski.tilemapman.model.LayerMask;

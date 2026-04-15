@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.tstamborski.tilemapman.gui;
+package com.tstamborski.tilemapman.util;
 
 import java.awt.Color;
 import java.awt.Graphics2D;

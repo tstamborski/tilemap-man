@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.tstamborski.tilemapman;
+package com.tstamborski.tilemapman.util;
 
 import com.tstamborski.tilemapman.model.ReadonlyShortMap2D;
 import com.tstamborski.tilemapman.model.Tileset;

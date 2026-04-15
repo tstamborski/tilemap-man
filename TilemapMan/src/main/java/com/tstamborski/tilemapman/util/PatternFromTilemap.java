@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.tstamborski.tilemapman;
+package com.tstamborski.tilemapman.util;
 
 import com.tstamborski.tilemapman.model.FixedShortMap2D;
 import com.tstamborski.tilemapman.model.ShortMap2D;
@@ -36,18 +36,18 @@ public class PatternFromTilemap {
     private int startX, startY;
     private int endX, endY;
     
-    public void setTilemapLayer(FixedShortMap2D layer) {
+    public PatternFromTilemap(FixedShortMap2D layer) {
         this.layer = layer;
     }
     
-    public void setStartPoint(int x, int y) {
-        startX = x;
-        startY = y;
+    public void setStartPoint(int xTilemap, int yTilemap) {
+        startX = xTilemap;
+        startY = yTilemap;
     }
     
-    public void setEndPoint(int x, int y) {
-        endX = x;
-        endY = y;
+    public void setEndPoint(int xTilemap, int yTilemap) {
+        endX = xTilemap;
+        endY = yTilemap;
     }
     
     public Point getUpperLeft() {
