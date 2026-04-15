@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2025 Tobiasz Stamborski <tstamborski@outlook.com>.
+ * Copyright 2026 Tobiasz Stamborski <tstamborski@outlook.com>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,22 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.tstamborski.tilemapman.gui;
+package com.tstamborski.gui;
 
-import java.awt.event.KeyEvent;
-import javax.swing.JMenuBar;
+import java.awt.Component;
+import java.awt.GridBagLayout;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 /**
  *
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
-public class MainMenu extends JMenuBar {
-    public EditMenu edit;
+public class CenteredScrollPane extends JScrollPane {
+    private final JPanel panel;
     
-    public MainMenu() {
-        edit = new EditMenu("Edit");
-        edit.setMnemonic(KeyEvent.VK_E);
+    public CenteredScrollPane() {
+        super(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         
-        add(edit);
+        panel = new JPanel();
+        panel.setLayout(new GridBagLayout());
+        super.setViewportView(panel);
+    }
+
+    @Override
+    public void setViewportView(Component view) {
+        panel.removeAll();
+        panel.add(view);
+        revalidate();
     }
 }

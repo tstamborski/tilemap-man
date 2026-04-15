@@ -32,7 +32,7 @@ import java.awt.event.MouseEvent;
  *
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
-public class TestView extends LayeredView {
+public class TestView extends AbstractLayeredView {
     private final TilemapProject project;
     private final Tileset set;
     

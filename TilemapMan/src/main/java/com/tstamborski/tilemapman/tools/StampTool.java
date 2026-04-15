@@ -21,22 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.tstamborski.tilemapman.gui;
+package com.tstamborski.tilemapman.tools;
 
-import java.awt.event.KeyEvent;
-import javax.swing.JMenuBar;
+import com.tstamborski.tilemapman.commands.CommandManager;
+import com.tstamborski.tilemapman.commands.CompositeCommand;
+import com.tstamborski.tilemapman.commands.StampCommand;
 
 /**
  *
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
-public class MainMenu extends JMenuBar {
-    public EditMenu edit;
+public class StampTool extends AbstractDrawingTool {
+    private CompositeCommand compCmd;
     
-    public MainMenu() {
-        edit = new EditMenu("Edit");
-        edit.setMnemonic(KeyEvent.VK_E);
-        
-        add(edit);
+    public StampTool(CommandManager manager) {
+        super(manager);
+    }
+
+    @Override
+    public void press(int layer, int x, int y) {
+        compCmd = new CompositeCommand();
+        apply(layer, x, y);
+    }
+
+    @Override
+    public void apply(int layer, int x, int y) {
+        StampCommand cmd = new StampCommand(project, layer, x, y, pattern);
+        cmd.execute();
+        compCmd.add(cmd);
+    }
+
+    @Override
+    public void release(int layer, int x, int y) {
+        cmdManager.add(compCmd);
     }
 }

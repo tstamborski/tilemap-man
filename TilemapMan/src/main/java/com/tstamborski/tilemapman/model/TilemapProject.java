@@ -30,7 +30,7 @@ import java.util.function.Consumer;
  *
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
-public class TilemapProject extends DataModel {
+public class TilemapProject extends AbstractDataModel {
     public final int MAX_LAYERS = LayerMask.MAX_LAYERS;
     
     private final ArrayList<ShortMap2D> layers;

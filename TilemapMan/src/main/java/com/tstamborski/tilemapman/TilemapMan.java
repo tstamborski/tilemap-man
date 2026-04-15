@@ -4,10 +4,11 @@
 
 package com.tstamborski.tilemapman;
 
-import com.tstamborski.gui.TestWindow;
+import com.tstamborski.tilemapman.tools.StampTool;
+import com.tstamborski.gui.TabbedWindow;
 import com.tstamborski.tilemapman.commands.CommandManager;
 import com.tstamborski.tilemapman.gui.MainMenu;
-import com.tstamborski.tilemapman.gui.TilemapEdit;
+import com.tstamborski.tilemapman.gui.EnhancedTilemapEdit;
 import com.tstamborski.tilemapman.model.TilemapProject;
 import com.tstamborski.tilemapman.model.Tileset;
 import com.tstamborski.tilemapman.model.TilesetLoader;
@@ -22,7 +23,7 @@ import java.net.URL;
 public class TilemapMan {
 
     public static void main(String[] args) {
-        TestWindow test = new TestWindow();
+        TabbedWindow test = new TabbedWindow();
         MainMenu menu = new MainMenu();
         CommandManager cmdManager = new CommandManager();
         StampTool stamp = new StampTool(cmdManager);
@@ -43,15 +44,16 @@ public class TilemapMan {
         menu.edit.undo.addActionListener(ae->cmdManager.undo());
         menu.edit.redo.addActionListener(ae->cmdManager.redo());
         
-        TilemapEdit edit = new TilemapEdit();
+        EnhancedTilemapEdit edit = new EnhancedTilemapEdit();
         edit.setBackground(new Color(0xAA, 0xAA, 0xFF));
         edit.setZoom(2);
-        edit.setTool(stamp);
         edit.setTilemapProject(map);
         edit.setTileset(tiles);
+        edit.setTool(stamp);
         
-        test.addComponent(edit);
+        test.addComponentTab("TILEMAP", edit);
         test.setJMenuBar(menu);
+        test.setTitle(TilemapMan.class.getSimpleName());
         test.setVisible(true);
         
         System.out.println("Tileset resolution: " + tiles.getOriginalWidth() + "x" + tiles.getOriginalHeight());

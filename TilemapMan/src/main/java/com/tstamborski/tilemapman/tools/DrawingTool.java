@@ -21,22 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.tstamborski.tilemapman.gui;
+package com.tstamborski.tilemapman.tools;
 
-import java.awt.event.KeyEvent;
-import javax.swing.JMenuBar;
+import com.tstamborski.tilemapman.model.ReadonlyShortMap2D;
+import com.tstamborski.tilemapman.model.TilemapProject;
 
 /**
  *
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
-public class MainMenu extends JMenuBar {
-    public EditMenu edit;
+public interface DrawingTool {
+    public void setPattern(ReadonlyShortMap2D pattern);
+    public ReadonlyShortMap2D getPattern();
+    public void setProject(TilemapProject project);
+    public TilemapProject getProject();
     
-    public MainMenu() {
-        edit = new EditMenu("Edit");
-        edit.setMnemonic(KeyEvent.VK_E);
-        
-        add(edit);
-    }
+    public void press(int layer, int x, int y);
+    public void apply(int layer, int x, int y);
+    public void release(int layer, int x, int y);
 }

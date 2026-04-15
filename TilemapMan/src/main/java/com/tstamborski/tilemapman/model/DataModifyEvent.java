@@ -28,8 +28,8 @@ package com.tstamborski.tilemapman.model;
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
 public class DataModifyEvent {
-    LayerMask layerMask;
-    boolean resized;
+    private final LayerMask layerMask;
+    private final boolean resized;
     
     public DataModifyEvent(LayerMask mask, boolean resized) {
         this.layerMask = mask.copy();
@@ -46,5 +46,9 @@ public class DataModifyEvent {
     
     public boolean isAllLayersModified() {
         return layerMask.isAllLayersModified();
+    }
+    
+    public LayerMask getLayerMask() {
+        return layerMask;
     }
 }

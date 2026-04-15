@@ -23,20 +23,24 @@
  */
 package com.tstamborski.tilemapman.gui;
 
-import java.awt.event.KeyEvent;
-import javax.swing.JMenuBar;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 
 /**
  *
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
-public class MainMenu extends JMenuBar {
-    public EditMenu edit;
+public class SelectionImage extends BufferedImage {
+    public static final int ALPHA = 0x44;
     
-    public MainMenu() {
-        edit = new EditMenu("Edit");
-        edit.setMnemonic(KeyEvent.VK_E);
+    public SelectionImage(int width, int height) {
+        super(width, height, TYPE_INT_ARGB);
         
-        add(edit);
+        Graphics2D g2d = createGraphics();
+        g2d.setColor(new Color(0, 0, 0, ALPHA));
+        g2d.fillRect(0, 0, width, height);
+        g2d.setColor(Color.WHITE);
+        g2d.drawRect(0, 0, width - 1, height - 1);
     }
 }

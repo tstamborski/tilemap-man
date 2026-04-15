@@ -21,38 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.tstamborski.tilemapman;
-
-import com.tstamborski.tilemapman.commands.CommandManager;
-import com.tstamborski.tilemapman.commands.CompositeCommand;
-import com.tstamborski.tilemapman.commands.StampCommand;
+package com.tstamborski.tilemapman.model;
 
 /**
  *
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
-public class StampTool extends AbstractDrawingTool {
-    private CompositeCommand compCmd;
+public abstract class AbstractDataModel {
     
-    public StampTool(CommandManager manager) {
-        super(manager);
+    private final DataModifyListenersList dataModifyTrigger;
+
+    public AbstractDataModel() {
+        dataModifyTrigger = new DataModifyListenersList();
     }
 
-    @Override
-    public void press(int layer, int x, int y) {
-        compCmd = new CompositeCommand();
-        apply(layer, x, y);
+    public void addDataModifyListener(DataModifyListener listener) {
+        dataModifyTrigger.add(listener);
     }
 
-    @Override
-    public void apply(int layer, int x, int y) {
-        StampCommand cmd = new StampCommand(project, layer, x, y, pattern);
-        cmd.execute();
-        compCmd.add(cmd);
+    public void removeDataModifyListener(DataModifyListener listener) {
+        dataModifyTrigger.remove(listener);
     }
 
-    @Override
-    public void release(int layer, int x, int y) {
-        cmdManager.add(compCmd);
+    public void beginModify() {
+        dataModifyTrigger.clearLayerMask();
+    }
+
+    public void endModify() {
+        dataModifyTrigger.fireDataModifyEvent();
+    }
+    
+    protected DataModifyListenersList getDataModifyTrigger() {
+        return dataModifyTrigger;
     }
 }

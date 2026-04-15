@@ -24,36 +24,28 @@
 package com.tstamborski.gui;
 
 import java.awt.BorderLayout;
-import java.awt.GridBagLayout;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 
 /**
  *
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
 public class TestWindow extends JFrame {
-    JScrollPane pane;
-    JPanel panel;
+    private final CenteredScrollPane pane;
     
     public TestWindow() {
         super("TEST WINDOW");
-        
-        pane = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-        panel = new JPanel();
-        panel.setLayout(new GridBagLayout());
-        pane.setViewportView(panel);
-        
         setLayout(new BorderLayout());
+        
+        pane = new CenteredScrollPane();
         add(pane, BorderLayout.CENTER);
         
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
     
-    public void addComponent(JComponent component) {
-        panel.add(component);
+    public void setComponent(JComponent component) {
+        pane.setViewportView(component);
     }
 }

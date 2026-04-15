@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2025 Tobiasz Stamborski <tstamborski@outlook.com>.
+ * Copyright 2026 Tobiasz Stamborski <tstamborski@outlook.com>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,22 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.tstamborski.tilemapman.gui;
+package com.tstamborski.gui;
 
-import java.awt.event.KeyEvent;
-import javax.swing.JMenuBar;
+import java.awt.BorderLayout;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JTabbedPane;
 
 /**
  *
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
-public class MainMenu extends JMenuBar {
-    public EditMenu edit;
+public class TabbedWindow extends JFrame {
+    private final JTabbedPane centralPane;
     
-    public MainMenu() {
-        edit = new EditMenu("Edit");
-        edit.setMnemonic(KeyEvent.VK_E);
+    public TabbedWindow() {
+        setLayout(new BorderLayout());
+        centralPane = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
+        add(centralPane, BorderLayout.CENTER);
         
-        add(edit);
+        setSize(800, 600);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+    
+    public void addComponentTab(String title, JComponent component) {
+        CenteredScrollPane pane = new CenteredScrollPane();
+        pane.setViewportView(component);
+        centralPane.add(title, pane);
     }
 }
