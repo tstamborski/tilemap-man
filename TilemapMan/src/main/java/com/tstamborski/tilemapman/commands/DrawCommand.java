@@ -26,6 +26,7 @@ package com.tstamborski.tilemapman.commands;
 import com.tstamborski.tilemapman.model.FixedShortMap2D;
 import com.tstamborski.tilemapman.model.ReadonlyShortMap2D;
 import com.tstamborski.tilemapman.model.ShortMap2D;
+import com.tstamborski.tilemapman.model.TileLimits;
 import com.tstamborski.tilemapman.model.TilemapProject;
 
 /**
@@ -57,7 +58,8 @@ public class DrawCommand implements Command {
             for (int j = 0; j < pattern.getHeight(); j++) {
                 if (x + i < dst.getWidth() && y + j < dst.getHeight()) {
                     dirtyRect.set(i, j, dst.get(x + i, y + j));
-                    dst.set(x+i, y+j, pattern.get(i, j));
+                    if (TileLimits.isValidTile(pattern.get(i, j)))
+                        dst.set(x+i, y+j, pattern.get(i, j));
                 }
             }
         }

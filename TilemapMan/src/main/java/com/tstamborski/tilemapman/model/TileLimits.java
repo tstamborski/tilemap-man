@@ -21,25 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.tstamborski.tilemapman.tools;
-
-import com.tstamborski.tilemapman.model.FixedShortMap2D;
-import com.tstamborski.tilemapman.util.PatternFromTilemap;
-import com.tstamborski.tilemapman.util.AbstractPatternMaker;
+package com.tstamborski.tilemapman.model;
 
 /**
  *
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
-public class TilemapSelectionTool extends AbstractSelectionTool {
-    private FixedShortMap2D tilemapLayer;
-
-    public void setLayer(FixedShortMap2D layer) {
-        this.tilemapLayer = layer;
-    }
-
-    @Override
-    protected AbstractPatternMaker getSelectionMaker() {
-        return new PatternFromTilemap(tilemapLayer);
+public class TileLimits {
+    public static short MIN_VALUE = 0;
+    public static short MAX_VALUE = Short.MAX_VALUE;
+    
+    public static short INVALID_TILE = -1;
+    
+    public static boolean isValidTile(short tileIndex) {
+        return (tileIndex >= MIN_VALUE && tileIndex <= MAX_VALUE);
     }
 }

@@ -23,23 +23,24 @@
  */
 package com.tstamborski.tilemapman.tools;
 
-import com.tstamborski.tilemapman.model.FixedShortMap2D;
-import com.tstamborski.tilemapman.util.PatternFromTilemap;
+import com.tstamborski.tilemapman.model.Tileset;
 import com.tstamborski.tilemapman.util.AbstractPatternMaker;
+import com.tstamborski.tilemapman.util.PatternFromTileset;
 
 /**
  *
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
-public class TilemapSelectionTool extends AbstractSelectionTool {
-    private FixedShortMap2D tilemapLayer;
+public class DefaultTilesetSelectionTool extends AbstractSelectionTool {
+    private Tileset tileset;
 
-    public void setLayer(FixedShortMap2D layer) {
-        this.tilemapLayer = layer;
+    public void setTileset(Tileset set) {
+        this.tileset = set;
     }
 
     @Override
     protected AbstractPatternMaker getSelectionMaker() {
-        return new PatternFromTilemap(tilemapLayer);
+        return new PatternFromTileset(tileset);
     }
+    
 }

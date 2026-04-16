@@ -21,25 +21,43 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.tstamborski.tilemapman.tools;
+package com.tstamborski.tilemapman.util;
 
-import com.tstamborski.tilemapman.model.FixedShortMap2D;
-import com.tstamborski.tilemapman.util.PatternFromTilemap;
-import com.tstamborski.tilemapman.util.AbstractPatternMaker;
+import com.tstamborski.tilemapman.model.ShortMap2D;
+import java.awt.Point;
 
 /**
  *
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
-public class TilemapSelectionTool extends AbstractSelectionTool {
-    private FixedShortMap2D tilemapLayer;
-
-    public void setLayer(FixedShortMap2D layer) {
-        this.tilemapLayer = layer;
+public abstract class AbstractPatternMaker {
+    protected int startX, startY;
+    protected int endX, endY;
+    
+    public void setStartPoint(int xTilemap, int yTilemap) {
+        startX = xTilemap;
+        startY = yTilemap;
     }
-
-    @Override
-    protected AbstractPatternMaker getSelectionMaker() {
-        return new PatternFromTilemap(tilemapLayer);
+    
+    public void setEndPoint(int xTilemap, int yTilemap) {
+        endX = xTilemap;
+        endY = yTilemap;
     }
+    
+    public Point getGridUpperLeft() {
+        return new Point(
+                Math.min(startX, endX),
+                Math.min(startY, endY)
+        );
+    }
+    
+    public Point getGridLowerRight() {
+        return new Point(
+                Math.max(startX, endX),
+                Math.max(startY, endY)
+        );
+    }
+    
+    public abstract ShortMap2D get();
 }
+

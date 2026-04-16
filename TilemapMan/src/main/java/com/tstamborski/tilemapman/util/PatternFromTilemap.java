@@ -25,45 +25,19 @@ package com.tstamborski.tilemapman.util;
 
 import com.tstamborski.tilemapman.model.FixedShortMap2D;
 import com.tstamborski.tilemapman.model.ShortMap2D;
-import java.awt.Point;
 
 /**
  *
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
-public class PatternFromTilemap {
-    private FixedShortMap2D layer;
-    private int startX, startY;
-    private int endX, endY;
+public class PatternFromTilemap extends AbstractPatternMaker {
+    private final FixedShortMap2D layer;
     
     public PatternFromTilemap(FixedShortMap2D layer) {
         this.layer = layer;
     }
     
-    public void setStartPoint(int xTilemap, int yTilemap) {
-        startX = xTilemap;
-        startY = yTilemap;
-    }
-    
-    public void setEndPoint(int xTilemap, int yTilemap) {
-        endX = xTilemap;
-        endY = yTilemap;
-    }
-    
-    public Point getUpperLeft() {
-        return new Point(
-                Math.min(startX, endX),
-                Math.min(startY, endY)
-        );
-    }
-    
-    public Point getLowerRight() {
-        return new Point(
-                Math.max(startX, endX),
-                Math.max(startY, endY)
-        );
-    }
-    
+    @Override
     public ShortMap2D get() {
         int w = Math.max(startX, endX) - Math.min(startX, endX) + 1;
         int h = Math.max(startY, endY) - Math.min(startY, endY) + 1;

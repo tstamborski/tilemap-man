@@ -25,7 +25,6 @@ package com.tstamborski.tilemapman.gui;
 
 import com.tstamborski.tilemapman.model.TilemapProject;
 import com.tstamborski.tilemapman.model.Tileset;
-import com.tstamborski.tilemapman.tools.SelectionTool;
 import com.tstamborski.tilemapman.tools.TilemapSelectionTool;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
@@ -37,7 +36,7 @@ import java.awt.event.MouseEvent;
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
 public class EnhancedTilemapEdit extends BasicTilemapEdit {
-    private final SelectionTool selectionTool;
+    private final TilemapSelectionTool selectionTool;
     private boolean rMouseButton;
     private ActionListener listener;
     
@@ -70,7 +69,15 @@ public class EnhancedTilemapEdit extends BasicTilemapEdit {
     @Override
     public void setTilemapProject(TilemapProject project) {
         super.setTilemapProject(project);
-        selectionTool.setProject(project);
+        selectionTool.setLayer(project.getLayer(getWorkLayer()));
+    }
+
+    @Override
+    public void setWorkLayer(int workLayer) {
+        super.setWorkLayer(workLayer);
+        
+        if (getTilemapProject() == null) return;
+        selectionTool.setLayer(getTilemapProject().getLayer(workLayer));
     }
 
     @Override
@@ -81,7 +88,7 @@ public class EnhancedTilemapEdit extends BasicTilemapEdit {
             return;
         
         if (event.getID() == MouseEvent.MOUSE_PRESSED && event.getButton() == MouseEvent.BUTTON3) {
-            selectionTool.press(getWorkLayer(), getTilemapX(event.getX()), getTilemapY(event.getY()));
+            selectionTool.press(getTilemapX(event.getX()), getTilemapY(event.getY()));
             rMouseButton = true;
             repaint();
         } if (event.getID() == MouseEvent.MOUSE_RELEASED && event.getButton() == MouseEvent.BUTTON3) {

@@ -9,6 +9,7 @@ import com.tstamborski.gui.TabbedWindow;
 import com.tstamborski.tilemapman.commands.CommandManager;
 import com.tstamborski.tilemapman.gui.MainMenu;
 import com.tstamborski.tilemapman.gui.EnhancedTilemapEdit;
+import com.tstamborski.tilemapman.gui.TilesetPicker;
 import com.tstamborski.tilemapman.model.TilemapProject;
 import com.tstamborski.tilemapman.model.Tileset;
 import com.tstamborski.tilemapman.model.TilesetLoader;
@@ -23,7 +24,7 @@ import java.net.URL;
 public class TilemapMan {
 
     public static void main(String[] args) {
-        TabbedWindow test = new TabbedWindow();
+        TabbedWindow testWnd = new TabbedWindow();
         MainMenu menu = new MainMenu();
         CommandManager cmdManager = new CommandManager();
         StampTool stamp = new StampTool(cmdManager);
@@ -32,14 +33,14 @@ public class TilemapMan {
         TilemapProject map = new TilemapProject(2, 8, 8);
         
         try {
-            tiles = TilesetLoader.fromURL(url, 16, 16);
+            tiles = TilesetLoader.fromURL(url, 16, 16, 20);
         } catch (IOException ex) {
             System.exit(-1);
             return;
         }
         
-        for (int i = 0; i < map.getWidth() * map.getHeight(); i++)
-            map.getLayer(0).set(i % map.getWidth(), i / map.getWidth(), (short)(i));
+        //for (int i = 0; i < map.getWidth() * map.getHeight(); i++)
+            //map.getLayer(0).set(i % map.getWidth(), i / map.getWidth(), (short)(i));
         
         menu.edit.undo.addActionListener(ae->cmdManager.undo());
         menu.edit.redo.addActionListener(ae->cmdManager.redo());
@@ -51,10 +52,17 @@ public class TilemapMan {
         edit.setTileset(tiles);
         edit.setTool(stamp);
         
-        test.addComponentTab("TILEMAP", edit);
-        test.setJMenuBar(menu);
-        test.setTitle(TilemapMan.class.getSimpleName());
-        test.setVisible(true);
+        TilesetPicker picker = new TilesetPicker();
+        picker.setBackground(Color.pink);
+        picker.setTileset(tiles);
+        picker.setZoom(1);
+        picker.setActionListener(ae -> edit.setPattern(picker.getSelectionPattern()));
+        
+        testWnd.addComponentTab("TILEMAP", edit);
+        testWnd.addComponentTab("TILESET", picker);
+        testWnd.setJMenuBar(menu);
+        testWnd.setTitle(TilemapMan.class.getSimpleName());
+        testWnd.setVisible(true);
         
         System.out.println("Tileset resolution: " + tiles.getOriginalWidth() + "x" + tiles.getOriginalHeight());
         System.out.println("Tileset size in tiles: " + tiles.getSize());

@@ -24,7 +24,6 @@
 package com.tstamborski.tilemapman.tools;
 
 import com.tstamborski.tilemapman.model.ShortMap2D;
-import com.tstamborski.tilemapman.model.TilemapProject;
 import java.awt.Graphics;
 
 /**
@@ -32,11 +31,10 @@ import java.awt.Graphics;
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
 public interface SelectionTool {
-    public void setProject(TilemapProject project);
     public void setTileSize(int width, int height);
     public void paintSelection(Graphics g);
     
-    public void press(int layer, int x, int y);
+    public void press(int x, int y);
     public void apply(int x, int y);
     public ShortMap2D release();
 }
