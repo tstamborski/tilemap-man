@@ -39,6 +39,11 @@ public class PatternFromTilemap extends AbstractPatternMaker {
     
     @Override
     public ShortMap2D get() {
+        if (endX < 0) endX = 0;
+        if (endX >= layer.getWidth()) endX = layer.getWidth() - 1;
+        if (endY < 0) endY = 0;
+        if (endY >= layer.getHeight()) endY = layer.getHeight() - 1;
+        
         int w = Math.max(startX, endX) - Math.min(startX, endX) + 1;
         int h = Math.max(startY, endY) - Math.min(startY, endY) + 1;
         

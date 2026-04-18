@@ -57,6 +57,11 @@ public class PatternFromTileset extends AbstractPatternMaker {
     
     @Override
     public ShortMap2D get() {
+        if (endX < 0) endX = 0;
+        if (endX >= tileset.getOriginalWidth()) endX = tileset.getOriginalWidth() - 1;
+        if (endY < 0) endY = 0;
+        if (endY >= tileset.getOriginalHeight()) endY = tileset.getOriginalHeight() - 1;
+        
         int w = Math.max(startX, endX) / tileset.getTileWidth() - Math.min(startX, endX) / tileset.getTileWidth() + 1;
         int h = Math.max(startY, endY) / tileset.getTileWidth() - Math.min(startY, endY) / tileset.getTileWidth() + 1;
         

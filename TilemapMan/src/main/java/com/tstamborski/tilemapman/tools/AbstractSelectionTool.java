@@ -27,6 +27,7 @@ import com.tstamborski.tilemapman.model.ShortMap2D;
 import com.tstamborski.tilemapman.model.TileLimits;
 import com.tstamborski.tilemapman.util.AbstractPatternMaker;
 import com.tstamborski.tilemapman.util.SelectionImage;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 
@@ -35,12 +36,14 @@ import java.awt.Point;
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
 public abstract class AbstractSelectionTool implements SelectionTool {
-    protected SelectionImage selectionImage;
+    protected SelectionImage selectionImage, invalidSelectionImage;
     protected AbstractPatternMaker selectionMaker;
     
     @Override
     public void setTileSize(int width, int height) {
         selectionImage = new SelectionImage(width, height);
+        invalidSelectionImage = 
+                new SelectionImage(width, height, Color.RED, new Color(0x44, 0, 0, SelectionImage.ALPHA));
     }
 
     @Override
@@ -69,6 +72,13 @@ public abstract class AbstractSelectionTool implements SelectionTool {
                 if (TileLimits.isValidTile(pattern.get(x, y)))
                     g.drawImage(
                             selectionImage,
+                            upperLeft.x + x * selectionImage.getWidth(),
+                            upperLeft.y + y * selectionImage.getHeight(),
+                            null
+                        );
+                else
+                    g.drawImage(
+                            invalidSelectionImage,
                             upperLeft.x + x * selectionImage.getWidth(),
                             upperLeft.y + y * selectionImage.getHeight(),
                             null

@@ -13,9 +13,12 @@ import com.tstamborski.tilemapman.gui.TilesetPicker;
 import com.tstamborski.tilemapman.model.TilemapProject;
 import com.tstamborski.tilemapman.model.Tileset;
 import com.tstamborski.tilemapman.model.TilesetLoader;
+import com.tstamborski.util.ErrorUtil;
 import java.awt.Color;
 import java.io.IOException;
 import java.net.URL;
+import java.util.logging.Level;
+import javax.imageio.ImageIO;
 
 /**
  *
@@ -33,7 +36,7 @@ public class TilemapMan {
         TilemapProject map = new TilemapProject(2, 8, 8);
         
         try {
-            tiles = TilesetLoader.fromURL(url, 16, 16, 20);
+            tiles = TilesetLoader.fromURL(url, 16, 16);
         } catch (IOException ex) {
             System.exit(-1);
             return;
@@ -62,6 +65,11 @@ public class TilemapMan {
         testWnd.addComponentTab("TILESET", picker);
         testWnd.setJMenuBar(menu);
         testWnd.setTitle(TilemapMan.class.getSimpleName());
+        try {
+            testWnd.setIconImage(ImageIO.read(TilemapMan.class.getResource("gui/icons/computerman48.png")));
+        } catch (IOException ex) {
+            ErrorUtil.logError(ex, Level.WARNING);
+        }
         testWnd.setVisible(true);
         
         System.out.println("Tileset resolution: " + tiles.getOriginalWidth() + "x" + tiles.getOriginalHeight());

@@ -35,12 +35,16 @@ public class SelectionImage extends BufferedImage {
     public static final int ALPHA = 0x44;
     
     public SelectionImage(int width, int height) {
+        this(width, height, Color.WHITE, new Color(0, 0, 0, ALPHA));
+    }
+    
+    public SelectionImage(int width, int height, Color borderColor, Color fillColor) {
         super(width, height, TYPE_INT_ARGB);
         
         Graphics2D g2d = createGraphics();
-        g2d.setColor(new Color(0, 0, 0, ALPHA));
+        g2d.setColor(fillColor);
         g2d.fillRect(0, 0, width, height);
-        g2d.setColor(Color.WHITE);
+        g2d.setColor(borderColor);
         g2d.drawRect(0, 0, width - 1, height - 1);
     }
 }
