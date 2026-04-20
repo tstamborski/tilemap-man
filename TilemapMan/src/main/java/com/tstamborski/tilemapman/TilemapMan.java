@@ -59,7 +59,7 @@ public class TilemapMan {
         picker.setBackground(Color.pink);
         picker.setTileset(tiles);
         picker.setZoom(1);
-        picker.setActionListener(ae -> edit.setPattern(picker.getSelectionPattern()));
+        picker.setSelectionListener(se -> edit.setPattern(se.getPattern()));
         
         testWnd.addComponentTab("TILEMAP", edit);
         testWnd.addComponentTab("TILESET", picker);

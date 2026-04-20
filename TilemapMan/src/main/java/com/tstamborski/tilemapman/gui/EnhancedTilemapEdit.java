@@ -23,12 +23,12 @@
  */
 package com.tstamborski.tilemapman.gui;
 
+import com.tstamborski.tilemapman.events.SelectionEvent;
+import com.tstamborski.tilemapman.events.SelectionListener;
 import com.tstamborski.tilemapman.model.TilemapProject;
 import com.tstamborski.tilemapman.model.Tileset;
 import com.tstamborski.tilemapman.tools.TilemapSelectionTool;
 import java.awt.Graphics;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 
 /**
@@ -38,13 +38,13 @@ import java.awt.event.MouseEvent;
 public class EnhancedTilemapEdit extends BasicTilemapEdit {
     private final TilemapSelectionTool selectionTool;
     private boolean rMouseButton;
-    private ActionListener listener;
+    private SelectionListener listener;
     
     public EnhancedTilemapEdit() {
         selectionTool = new TilemapSelectionTool();
     }
     
-    public void setActionListener(ActionListener listener) {
+    public void setSelectionListener(SelectionListener listener) {
         this.listener = listener;
     }
 
@@ -95,7 +95,7 @@ public class EnhancedTilemapEdit extends BasicTilemapEdit {
             setPattern(selectionTool.release());
             rMouseButton = false;
             repaint();
-            fireActionEvent();
+            fireSelectionEvent();
         }
     }
 
@@ -121,8 +121,8 @@ public class EnhancedTilemapEdit extends BasicTilemapEdit {
         }
     }
     
-    protected void fireActionEvent() {
+    protected void fireSelectionEvent() {
         if (listener != null)
-            listener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "SELECTION"));
+            listener.selectionPerformed(new SelectionEvent(this, getPattern()));
     }
 }

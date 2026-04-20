@@ -23,12 +23,12 @@
  */
 package com.tstamborski.tilemapman.gui;
 
+import com.tstamborski.tilemapman.events.SelectionEvent;
+import com.tstamborski.tilemapman.events.SelectionListener;
 import com.tstamborski.tilemapman.model.ShortMap2D;
 import com.tstamborski.tilemapman.model.Tileset;
 import com.tstamborski.tilemapman.tools.DefaultTilesetSelectionTool;
 import java.awt.Graphics;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 
 /**
@@ -38,15 +38,15 @@ import java.awt.event.MouseEvent;
 public class TilesetPicker extends TilesetView {
     private final DefaultTilesetSelectionTool selectionTool;
     private ShortMap2D selectionPattern;
-    private ActionListener actionListener;
+    private SelectionListener selectionListener;
     
     public TilesetPicker() {
         selectionTool = new DefaultTilesetSelectionTool();
         enableEvents(MouseEvent.MOUSE_EVENT_MASK | MouseEvent.MOUSE_MOTION_EVENT_MASK);
     }
     
-    public void setActionListener(ActionListener al) {
-        this.actionListener = al;
+    public void setSelectionListener(SelectionListener al) {
+        this.selectionListener = al;
     }
 
     @Override
@@ -95,7 +95,7 @@ public class TilesetPicker extends TilesetView {
             repaint();
         } else if (e.getButton() == MouseEvent.BUTTON1 && e.getID() == MouseEvent.MOUSE_RELEASED) {
             selectionPattern = selectionTool.release();
-            fireActionEvent();
+            fireSelectionEvent();
         }
     }
 
@@ -105,9 +105,9 @@ public class TilesetPicker extends TilesetView {
         selectionTool.paintSelection(g);
     }
 
-    protected void fireActionEvent() {
-        if (actionListener != null) {
-            actionListener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "SELECTION"));
+    protected void fireSelectionEvent() {
+        if (selectionListener != null) {
+            selectionListener.selectionPerformed(new SelectionEvent(this, selectionPattern));
         }
     }
 }

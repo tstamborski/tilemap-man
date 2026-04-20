@@ -60,12 +60,6 @@ public abstract class AbstractSelectionTool implements SelectionTool {
         lowerRight.y *= selectionImage.getHeight();
         
         ShortMap2D pattern = selectionMaker.get();
-        
-//        for (int y = upperLeft.y; y <= lowerRight.y; y += selectionImage.getHeight()) {
-//            for (int x = upperLeft.x; x <= lowerRight.x; x += selectionImage.getWidth()) {
-//                g.drawImage(selectionImage, x, y, null);
-//            }
-//        }
 
         for (int y = 0; y < pattern.getHeight(); y++) {
             for (int x = 0; x < pattern.getWidth(); x++) {
